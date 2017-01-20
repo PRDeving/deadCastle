@@ -1,0 +1,12 @@
+{
+  "Debug": true,
+  "modules": [
+    "scenemanager",
+    "canvasmanager",
+    "structures",
+    "gameloop",
+    "doublebuffer",
+    "mousemanager",
+    "debugger"
+  ]
+}
