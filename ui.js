@@ -26,11 +26,20 @@ SGE.ui = new function() {
     c.width = width;
     c.height = height;
     var cx = c.getContext('2d');
-    cx.fontSize = size || 18;
-    cx.fillStyle = "white";
+    // cx.font = (size || 50) + ' VT323';
+    cx.font = "bold " + (size || 30) + "pt VT323";
+    var s = width;
+    this.s = s;
 
-    function _render(msg) {
-      var s = cx.measureText(msg);
+    function _render(msg, color, stroke) {
+      cx.clearRect(0, 0, width, height);
+      s = cx.measureText(msg);
+      this.s = s;
+      cx.fillStyle = color || "white";
+      if (stroke) {
+        cx.strokeStyle = "black";
+        cx.strokeText(msg, (width/ 2) - (s.width/2), (height/2) + 4);
+      }
       cx.fillText(msg, (width/ 2) - (s.width/2), (height/2) + 4);
       return c;
     }
@@ -40,18 +49,83 @@ SGE.ui = new function() {
     this.height = height;
   }
 
-  _poptag = function(msg, cls) {
-    var cls = cls || '';
-    var p = $('<div>').html(msg).addClass(cls).addClass('poptag').css({
-      top: canvas.height / 2,
-      left: canvas.width / 2,
-    }).addClass('active').css('top', 0).fadeOut(200);
-    setTimeout( function() {
-      p.remove();
-    }, 300);
+  _poptagStack = [];
+  _poptag = function(msg, cls, x ,y) {
+    setTimeout(function() {
+      _poptagStack.push(new _cpoptag(msg, cls, x, y));
+    }, Math.floor(Math.random() * 750));
   }
+
+  _cpoptag = function(msg, cls, x, y) {
+    var width = canvas.width;
+    var height = 100;
+    this.top = 0;
+    var c = document.createElement('canvas')
+    c.width = width;
+    c.height = height;
+    var cx = c.getContext('2d');
+    var msg = msg;
+    var s = 14;
+    cx.font = s + "pt Arial";
+    this.off = cx.measureText(msg);
+    var speed = Math.floor(Math.random() * 3);
+
+    this.x = x ? (x - width / 2) : 0;
+    this.y = y ? y : (canvas.height / 2 - 30);
+    this.alpha = 1.01;
+    //
+    // cx.fillStyle = "white";
+    // cx.strokeStyle = "black";
+
+    switch (cls) {
+      case "exp":
+        cx.fillStyle = "#015dd0";
+        cx.strokeStyle = "black";
+        break;
+      case "gold":
+        cx.fillStyle = "#eab419";
+        cx.strokeStyle = "black";
+        break;
+    }
+
+    function _update() {
+      this.top += speed;
+      if (this.top > 200) this.end = true;
+    }
+
+    function _render() {
+      cx.clearRect(0, 0, width, height);
+      cx.font = Math.floor(s+=.2) + "pt VT323";
+      cx.globalAlpha = this.alpha -= .01;
+      this.off = cx.measureText(msg);
+      cx.fillText(msg, width/2 -this.off.width/2, height/2);
+      cx.strokeText(msg, width/2 -this.off.width/2, height/2);
+      return c;
+    }
+
+    this.render = _render;
+    this.width = width;
+    this.height = height;
+    this.update = _update;
+  }
+
+  _digestPoptag = function() {
+    // SGE.Debugger.Log({
+    //   'lols': _poptagStack.length,
+    // });
+    var pt;
+    for (var i = 0; i < _poptagStack.length; i++) {
+      pt = _poptagStack[i];
+      pt.update();
+      // ctx.drawImage(pt.render(), 0, canvas.height/2 - 30 - pt.top);
+      ctx.drawImage(pt.render(), pt.x, pt.y - pt.top);
+      if (pt.end || pt.alpha < 0) _poptagStack.splice(i, 1);
+    }
+  }
+
 
   this.button = _button;
   this.text = _text;
   this.poptag = _poptag;
+  this.digestPoptag = _digestPoptag;
 }

@@ -5,8 +5,6 @@
     "canvasmanager",
     "structures",
     "gameloop",
-    "doublebuffer",
-    "mousemanager",
-    "debugger"
+    "mousemanager"
   ]
 }
