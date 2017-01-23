@@ -26,8 +26,8 @@ SGE.classes.Enemy = function(line) {
 
 
   function _dead() {
-    var speed = 0;
-    var rip = true;
+    speed = 0;
+    rip = true;
   }
 
   function _isDead() {
@@ -36,7 +36,7 @@ SGE.classes.Enemy = function(line) {
 
   var counts = 0;
   function _update() {
-    if (Math.sqrt(Math.pow(pos.x + center[0]) - Math.pow(pos.y + center[1])) < 50) {
+    if (Math.sqrt(Math.pow(pos.x - center[0], 2) + Math.pow(pos.y - center[1], 2)) < Math.sqrt(Math.pow(50, 2) + Math.pow(50, 2))) {
       // under
       // animation = 'attack';
     } else {

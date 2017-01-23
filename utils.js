@@ -1,5 +1,5 @@
 SGE.utils = {
-  _getline: function(x, y) {
+  getline: function(x, y) {
     if (x < canvas.width/3 && y < canvas.height/3) return 7;
     if (x < canvas.width/3 && y < (canvas.height/3) * 2) return 6;
     if (x < canvas.width/3) return 5;
@@ -11,56 +11,72 @@ SGE.utils = {
     return 3;
   },
 
-  _getSpawn: function(l) {
+  getSpawn: function(l) {
     switch (l) {
-      case '0':
+      case 0:
         return {
           x: canvas.width/2,
           y: -50,
         }
         break;
-      case '1':
+      case 1:
         return {
           x: canvas.width + 50,
           y: -50,
         }
         break;
-      case '2':
+      case 2:
         return {
           x: canvas.width + 50,
           y: canvas.height/2,
         }
         break;
-      case '3':
+      case 3:
         return {
           x: canvas.width + 50,
           y: canvas.height + 50,
         }
         break;
-      case '4':
+      case 4:
         return {
           x: canvas.width/2,
           y: canvas.height + 50,
         }
         break;
-      case '5':
+      case 5:
         return {
           x: -50,
           y: canvas.height + 50,
         }
         break;
-      case '6':
+      case 6:
         return {
           x: -50,
           y: canvas.height/2,
         }
         break;
-      case '6':
+      case 7:
         return {
           x: -50,
           y: -50,
         }
         break;
     }
-  }
+  },
+
+  countdown: function (s, cb) {
+    function loop() {
+      $('#countdown').fadeOut(100);
+      if (s >= 0) wait();
+      else cb();
+    }
+
+    function wait() {
+      $('#countdown').html(s).fadeIn(100);
+      s--;
+      setTimeout(loop, 1000);
+    }
+    wait();
+  },
+
 }

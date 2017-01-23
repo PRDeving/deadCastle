@@ -21,6 +21,8 @@ SGE.classes.Player = function() {
   var hpMax = 100;
   var hpRec = 0;
 
+  var strength = 100;
+
   var pointsMod = 1;
 
   var tileS = 64;
@@ -62,8 +64,8 @@ SGE.classes.Player = function() {
     }
   }
 
-  var animation;
-  var frame;
+  var animation = 'idle';
+  var frame = 0;
   function _update() {
     if (attacking > 0) {
       attacking--;
@@ -79,16 +81,17 @@ SGE.classes.Player = function() {
   var c;
   var cx;
   function _render(media) {
-    if (window.plPrerender[animation][frame]) return window.plPrerender[animation][frame];
+    if (window.plPrerender[animation] && window.plPrerender[animation][frame]) return window.plPrerender[animation][frame];
 
     c = document.createElement('canvas');
     c.width = width;
     c.height = height;
     cx = c.getContext('2d');
 
-    c.clearRect(0, 0, width, height);
-    cx.drawImage(media.hero, animation[frame] * tileS, 0, tileS, tileS, 0, 0, width, height);
+    cx.clearRect(-1, 0, width, height);
+    cx.drawImage(media.hero, animations[animation][frame] * tileS, 0, tileS, tileS, 0, 0, width, height);
 
+    if (!window.plPrerender[animation]) window.plPrerender[animation] = {};
     window.plPrerender[animation][frame] = c;
     return c;
   }
@@ -96,6 +99,7 @@ SGE.classes.Player = function() {
   this.width = width;
   this.height = height;
   this.pos = pos;
+  this.tileS = tileS;
   this.range = range;
   this.points = points;
 
@@ -103,6 +107,7 @@ SGE.classes.Player = function() {
   this.manaMax = manaMax;
   this.hp = hp;
   this.hpMax = hpMax;
+  this.strength = strength;
 
   this.render = _render;
   this.update = _update;

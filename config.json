@@ -5,6 +5,7 @@
     "canvasmanager",
     "structures",
     "gameloop",
-    "mousemanager"
+    "mousemanager",
+    "mediamanager"
   ]
 }
