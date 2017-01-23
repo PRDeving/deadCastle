@@ -36,7 +36,7 @@ SGE.classes.Enemy = function(line) {
 
   var counts = 0;
   function _update() {
-    if (Math.sqrt(Math.pow(pos.x - center[0], 2) + Math.pow(pos.y - center[1], 2)) < Math.sqrt(Math.pow(50, 2) + Math.pow(50, 2))) {
+    if (Math.sqrt(Math.pow(pos.x - center[0], 2) + Math.pow(pos.y - center[1], 2)) < Math.sqrt(Math.pow(30, 2) + Math.pow(30, 2))) {
       // under
       // animation = 'attack';
     } else {
@@ -79,7 +79,7 @@ SGE.classes.Enemy = function(line) {
   this.pos = pos;
   this.rip = rip;
 
-  this.line = line;
+  this.__defineGetter__('line', function() { return line; });
   this.speed = speed;
 
 }

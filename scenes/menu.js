@@ -1,4 +1,5 @@
 function SceneConstructor(App) {
+  console.log(arguments);
   console.log('hi');
   $('#menu').show();
   App.$loading.fadeOut(300);

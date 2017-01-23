@@ -23,6 +23,7 @@ function Init() {
     $level: $('#level'),
     $hp: $('#hp'),
     $mana: $('#mana'),
+    $keepPlaying: $('#keepPlaying'),
 
     canvas: window.canvas,
     ctx: window.ctx,

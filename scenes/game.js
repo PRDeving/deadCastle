@@ -2,13 +2,13 @@ function SceneConstructor(App) {
   App.$loading.fadeOut(300);
   $('#game').show();
 
+  var start;
   var game = new SGE.classes.Game(1);
   var pl = new SGE.classes.Player();
   var bg = game.renderBG(App.media);
 
   App.game = game;
   App.player = pl;
-
 
   var enemies = [];
   function spawn() {
@@ -40,12 +40,20 @@ function SceneConstructor(App) {
   var lmana = pl.mana;
   var hitzone = [];
 
+  var tpoints = 0;
+
   SGE.GameLoop.Suscribe(function() {
     hitzone.length = 0;
 
     if (lpoints != pl.points) {
-      lpoints = pl.points;
+      tpoints += +pl.points - lpoints;
+      lpoints = +pl.points;
       App.$points.html(pl.points);
+
+      if (tpoints > (1000 * game.level) * 1.2) {
+        game.levelUp();
+        SGE.ui.poptag('Level Up', 'level');
+      }
     }
     if (game.level != llevel) {
       llevel++;
@@ -53,11 +61,11 @@ function SceneConstructor(App) {
       App.$level.html(game.level);
     }
     if (lhp != pl.hp) {
-      lhp = pl.hp;
+      lhp = +pl.hp;
       App.$hp.html(pl.hp);
     }
     if (lmana != pl.mana) {
-      lmana = pl.mana;
+      lmana = +pl.mana;
       App.$mana.html(pl.mana);
     }
   }, true);
@@ -77,6 +85,7 @@ function SceneConstructor(App) {
         continue;
       }
 
+      e.update();
       distance = Math.sqrt(Math.abs(Math.pow(e.pos.x - canvas.width/2, 2) + Math.pow(e.pos.y - canvas.height/2, 2)));
       if (distance <= Math.sqrt(Math.abs(Math.pow(pl.range, 2) + Math.pow(pl.range, 2)))) {
         hitzone.push(e);
@@ -88,11 +97,9 @@ function SceneConstructor(App) {
           hitcount = pl.strength;
 
           // handle
-          pl.hp--;
-          SGE.ui.poptag('-1', 'hp', pl.pos.x, pl.pos.y);
+          pl.hit(1);
         }
       } else {
-        e.update();
         App.ctx.drawImage(e.render(App.media), e.pos.x - e.width/2, e.pos.y - e.height/2);
       }
     }
@@ -101,7 +108,25 @@ function SceneConstructor(App) {
     App.ctx.drawImage(pl.render(App.media), pl.pos.x, pl.pos.y);
     SGE.ui.digestPoptag();
 
-    if (pl.hp <= 0) SGE.Scene.Load('dead', App);
+    if (pl.dead) {
+      SGE.GameLoop.Stop();
+
+      SGE.ui.modal.Open(App.$keepPlaying, {
+        '.yes': function() {
+          SGE.ui.modal.Close(App.$keepPlaying);
+          pl.reset();
+          App.$hp.html(pl.hp);
+          App.$mana.html(pl.mana);
+          SGE.utils.countdown(3, function() {
+            SGE.GameLoop.Run(60);
+          });
+        },
+        '.no': function() {
+          SGE.ui.modal.Close(App.$keepPlaying);
+          SGE.Scene.Load('dead', App, tpoints, Date.now() - start);
+        }
+      });
+    }
   });
 
   var counticks = 0;
@@ -127,11 +152,13 @@ function SceneConstructor(App) {
   App.$mana.html(pl.mana);
 
   SGE.utils.countdown(3, function() {
+    start = Date.now();
     SGE.GameLoop.Run(60);
   });
 }
 
 function SceneDestructor(App) {
   $(App.canvas).off();
+  SGE.GameLoop.Stop();
   $('#game').hide();
 }

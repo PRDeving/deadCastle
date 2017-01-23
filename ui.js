@@ -78,12 +78,20 @@ SGE.NewModule('ui', new function() {
     // cx.strokeStyle = "black";
 
     switch (cls) {
-      case "exp":
+      case "mana":
         cx.fillStyle = "#015dd0";
         cx.strokeStyle = "black";
         break;
       case "gold":
         cx.fillStyle = "#eab419";
+        cx.strokeStyle = "black";
+        break;
+      case "level":
+        cx.fillStyle = "#f19e34";
+        cx.strokeStyle = "black";
+        break;
+      case "hp":
+        cx.fillStyle = "#e43636";
         cx.strokeStyle = "black";
         break;
     }
@@ -123,9 +131,27 @@ SGE.NewModule('ui', new function() {
     }
   }
 
+  _modal = {
+    Open: function(sel, buttons) {
+      if (typeof sel == 'string') sel = $(sel);
+      sel.fadeIn(200);
+      setTimeout(function() { 
+        sel.addClass('active');
+      }, 300);
+
+      for (var b in buttons) sel.find(b).on('click', buttons[b]);
+    },
+    Close: function(sel, cb) {
+      if (typeof sel == 'string') sel = $(sel);
+      sel.find('.button').off();
+      sel.removeClass('active').fadeOut(300);
+      if (cb) cb();
+    }
+  }
 
   this.button = _button;
   this.text = _text;
   this.poptag = _poptag;
   this.digestPoptag = _digestPoptag;
+  this.modal = _modal;
 });
