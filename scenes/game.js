@@ -23,7 +23,7 @@ function SceneConstructor(App) {
           enemies.push(new SGE.classes.Enemy(path));
           break;
         case 4:
-          path = parseInt((Math.floor(Math.random() * 4) * 2 - 1) || 0);
+          path = Math.floor(Math.random() * 4) * 2;
           enemies.push(new SGE.classes.Enemy(path));
           break;
         case 2:
