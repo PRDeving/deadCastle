@@ -11,5 +11,59 @@ SGE.utils = {
     return 3;
   }
 
+  function _getSpawn(l) {
+    switch (l) {
+      case '0':
+        return {
+          x: canvas.width/2,
+          y: -50,
+        }
+        break;
+      case '1':
+        return {
+          x: canvas.width + 50,
+          y: -50,
+        }
+        break;
+      case '2':
+        return {
+          x: canvas.width + 50,
+          y: canvas.height/2,
+        }
+        break;
+      case '3':
+        return {
+          x: canvas.width + 50,
+          y: canvas.height + 50,
+        }
+        break;
+      case '4':
+        return {
+          x: canvas.width/2,
+          y: canvas.height + 50,
+        }
+        break;
+      case '5':
+        return {
+          x: -50,
+          y: canvas.height + 50,
+        }
+        break;
+      case '6':
+        return {
+          x: -50,
+          y: canvas.height/2,
+        }
+        break;
+      case '6':
+        return {
+          x: -50,
+          y: -50,
+        }
+        break;
+    }
+  }
+
   this.getline = _getline;
+  this.getSpawn = _getSpawn;
 }
