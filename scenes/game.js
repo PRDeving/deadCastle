@@ -143,6 +143,21 @@ function SceneConstructor(App) {
     pl.attack(ev.pageX, ev.pageY, hitzone);
   }
 
+  var $inventary = $('#inventary');
+  $('#pointsContainer').on('click', function() {
+    SGE.GameLoop.Stop();
+    SGE.ui.modal.Open($inventary, {
+      '.close': function() {
+        SGE.ui.modal.Close($inventary, function() {
+          $inventary.find('.close').off();
+        });
+        SGE.GameLoop.Run(60);
+      }
+    }, function() {
+      $inventary.find('#coins').html(pl.points);
+    });
+  });
+
   App.ctx.drawImage(bg, 0, 0);
   App.ctx.drawImage(pl.render(App.media), pl.pos.x, pl.pos.y);
 
@@ -160,5 +175,6 @@ function SceneConstructor(App) {
 function SceneDestructor(App) {
   $(App.canvas).off();
   SGE.GameLoop.Stop();
+  $('#pointsContainer').off();
   $('#game').hide();
 }

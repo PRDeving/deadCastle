@@ -198,6 +198,87 @@
       padding-top: 20px;
       display: inline-block;
     }
+
+    #inventary .modal-container {
+      height: 90%;
+    }
+    #inventary.modal.active .modal-container{
+      top:5%;
+    }
+    #inventary .close {
+      position: absolute;
+      font-size: 40px;
+      top: -20px;
+      right: 0px;
+      color: white;
+      font-weight: bold;
+      text-shadow: 2px 0 0 #000, -2px 0 0 #000, 0 2px 0 #000, 0 -2px 0 #000, 1px 1px #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000;
+    }
+    #inventary #coins {
+      position: absolute;
+      top: -20px;
+      left: 45px;
+      font-size: 60px;
+      color: #f3bf4c;
+      font-weight: bold;
+      text-shadow: 2px 0 0 #000, -2px 0 0 #000, 0 2px 0 #000, 0 -2px 0 #000, 1px 1px #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000;
+    }
+    #inventary #coins::before {
+      content: '';
+      width: 40px;
+      height: 40px;
+      position: absolute;
+      background-image: url("http://vignette2.wikia.nocookie.net/clubpenguin/images/2/22/Treasure_Chest_(2011).png/revision/latest?cb=20150213234158");
+      background-size: 100%;
+      background-repeat: no-repeat;
+      top: 25px;
+      left: -40px;
+    }
+    #inventary #items {
+      height: 300px;
+      overflow-y:scroll;
+    }
+    .item {
+      width: 32%;
+      height: 100px;
+      margin-left: 1%;
+      margin-top: 1%;
+      float: left;
+      background-color: grey;
+    }
+    #inventary #equipement {
+      height: 100px;
+      width: 100%;
+      margin-bottom: 20px;
+      margin-top: 60px;
+    }
+    #inventary #market-button {
+      width: 200px;
+      height: 40px;
+      text-align: center;
+      margin: auto auto;
+      background-color: orange;
+
+      -webkit-box-shadow: 3px 3px 5px 0px rgba(0,0,0,0.75);
+      -moz-box-shadow: 3px 3px 5px 0px rgba(0,0,0,0.75);
+      box-shadow: 3px 3px 5px 0px rgba(0,0,0,0.75);
+
+      cursor: pointer;
+    }
+    #inventary #market-button::hover,
+    #inventary #market-button::active {
+      background-color: #ffbb3e;
+
+      -webkit-box-shadow: 3px 3px 5px 0px rgba(0,0,0,0.85);
+      -moz-box-shadow: 3px 3px 5px 0px rgba(0,0,0,0.85);
+      box-shadow: 3px 3px 5px 0px rgba(0,0,0,0.85);
+    }
+    #inventary #market-button p {
+      color: white;
+      padding: 5px;
+      font-size: 30px;
+      text-shadow: 2px 0 0 #000, -2px 0 0 #000, 0 2px 0 #000, 0 -2px 0 #000, 1px 1px #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000;
+    }
   </style>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 </head>
@@ -218,6 +299,28 @@
         <div class="buttons">
           <div class="yes button"><p>yes</p></div>
           <div class="no button"><p>no</p></div>
+        </div>
+      </div>
+    </div>
+
+    <div id="inventary" class="modal">
+      <div class="modal-container">
+        <div class="close">X</div>
+        <div id="coins"></div>
+        <div id="equipement">
+          <div id="armor" class="item"></div>
+          <div id="weapon" class="item"></div>
+          <div id="stats" class="item"></div>
+        </div>
+        <div id="items">
+          <div class="item"></div>
+          <div class="item"></div>
+          <div class="item"></div>
+          <div class="item"></div>
+          <div class="item"></div>
+        </div>
+        <div id="market-button">
+          <p>Go to market</p>
         </div>
       </div>
     </div>

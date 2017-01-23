@@ -132,11 +132,12 @@ SGE.NewModule('ui', new function() {
   }
 
   _modal = {
-    Open: function(sel, buttons) {
+    Open: function(sel, buttons, cb) {
       if (typeof sel == 'string') sel = $(sel);
       sel.fadeIn(200);
       setTimeout(function() { 
         sel.addClass('active');
+        if (cb) cb();
       }, 300);
 
       for (var b in buttons) sel.find(b).on('click', buttons[b]);
