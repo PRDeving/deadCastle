@@ -1,6 +1,7 @@
 function Init() {
   SGE.Loader.Add([
     'ui.js',
+    'utils.js',
     'class/game.js',
     'class/enemy.js',
     'class/player.js',
