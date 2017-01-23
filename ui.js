@@ -1,4 +1,4 @@
-SGE.ui = new function() {
+SGE.NewModule('ui', new function() {
   _button = function(w, h) {
     var width = w || 80;
     var height = h || 40;
@@ -128,4 +128,4 @@ SGE.ui = new function() {
   this.text = _text;
   this.poptag = _poptag;
   this.digestPoptag = _digestPoptag;
-}
+});

@@ -1,4 +1,4 @@
-SGE.utils = {
+SGE.NewModule('utils', {
   getline: function(x, y) {
     if (x < canvas.width/3 && y < canvas.height/3) return 7;
     if (x < canvas.width/3 && y < (canvas.height/3) * 2) return 6;
@@ -79,4 +79,4 @@ SGE.utils = {
     wait();
   },
 
-}
+});
