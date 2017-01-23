@@ -1,5 +1,5 @@
 SGE.utils = {
-  function _getline(x, y) {
+  _getline: function(x, y) {
     if (x < canvas.width/3 && y < canvas.height/3) return 7;
     if (x < canvas.width/3 && y < (canvas.height/3) * 2) return 6;
     if (x < canvas.width/3) return 5;
@@ -9,9 +9,9 @@ SGE.utils = {
     if (y < canvas.height/3) return 1;
     if (y < (canvas.height/3) * 2) return 2;
     return 3;
-  }
+  },
 
-  function _getSpawn(l) {
+  _getSpawn: function(l) {
     switch (l) {
       case '0':
         return {
@@ -63,7 +63,4 @@ SGE.utils = {
         break;
     }
   }
-
-  this.getline = _getline;
-  this.getSpawn = _getSpawn;
 }
