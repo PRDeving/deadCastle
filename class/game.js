@@ -1,7 +1,7 @@
 if (!SGE.classes) SGE.classes = {};
 
 SGE.classes.Game = function(lvl) {
-  this.level = lvl || 5;
+  var level = lvl || 0;
 
   function _renderBG(media) {
     var c = document.createElement('canvas');
@@ -72,5 +72,6 @@ SGE.classes.Game = function(lvl) {
     return c2;
   }
 
+  this.level = level;
   this.renderBG = _renderBG;
 };

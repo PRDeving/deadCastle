@@ -50,6 +50,7 @@ function SceneConstructor(App) {
     if (game.level != llevel) {
       llevel++;
       bg = game.renderBG(App.media);
+      App.$level.html(game.level);
     }
     if (lhp != pl.hp) {
       lhp = pl.hp;
@@ -121,6 +122,7 @@ function SceneConstructor(App) {
   App.ctx.drawImage(pl.render(App.media), pl.pos.x, pl.pos.y);
 
   App.$points.html(pl.points);
+  App.$level.html(game.level);
   App.$hp.html(pl.hp);
   App.$mana.html(pl.mana);
 

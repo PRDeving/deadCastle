@@ -94,6 +94,15 @@
       color: #f3bf4c;
       text-shadow: 2px 0 0 #000, -2px 0 0 #000, 0 2px 0 #000, 0 -2px 0 #000, 1px 1px #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000;
     }
+    #level {
+      font-size: 30px;
+      color: #f19e34;
+    }
+    #level::before {
+      content: 'Level ';
+      font-size: 30px;
+      color: #f19e34;
+    }
     #hpContainer {
       position: absolute;
       right: 10px;
@@ -165,13 +174,12 @@
     <p id="go">Go</p>
   </section>
   <section id="game">
-    <div id="pointsContainer"><div id="crate"></div><div id="points"></div></div>
-
+    <div id="pointsContainer">
+      <div id="crate"></div><div id="points"></div>
+      <div id="level"></div>
+    </div>
     <div id="hp"></div>
     <div id="mana"></div>
-
-    <!-- <div id="hpContainer"><div id="hp"></div></div> -->
-    <!-- <div id="manaContainer"><div id="mana"></div></div> -->
     <canvas id="gameCanvas"></canvas>
   </section>
   <script app="app.js" src="SGE/engine.js"></script>

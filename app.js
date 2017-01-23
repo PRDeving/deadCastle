@@ -20,6 +20,7 @@ function Init() {
     $window: $window,
     $loading: $('#loading'),
     $points: $('#points'),
+    $level: $('#level'),
     $hp: $('#hp'),
     $mana: $('#mana'),
 
