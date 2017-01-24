@@ -1,0 +1,58 @@
+{
+  "0": {
+    "id": 0,
+    "block": 0,
+    "name": "cacerolo",
+    "hp": 0,
+    "mana": 0,
+    "hpSec": 0,
+    "manaSec": 0,
+    "gold": 0,
+    "goldSec": 0,
+    "cost": 100,
+    "sell": 4
+  },
+  "1": {
+    "id": 1,
+    "block": 0,
+    "name": "palo largo",
+    "hp": 0,
+    "mana": 1,
+    "hpSec": 0,
+    "manaSec": 0,
+    "gold": 10,
+    "goldSec": 0,
+    "cost": 150,
+    "sell": 30
+  },
+  "2": {
+    "id": 2,
+    "block": 0,
+    "name": "espada",
+    "hp": 1,
+    "mana": 1,
+    "hpSec": 0,
+    "manaSec": 0,
+    "gold": 10,
+    "goldSec": 0,
+    "cost": 400,
+    "sell": 50
+  },
+  
+
+
+  "1001": {
+    "id": 1001,
+    "block": 1,
+    "name": "saco de harpillera",
+    "hp": 0,
+    "mana": 0,
+    "hpSec": 0,
+    "manaSec": 0,
+    "gold": 0,
+    "goldSec": 1,
+    "strength": 20,
+    "cost": 400,
+    "sell": 50
+  }
+}

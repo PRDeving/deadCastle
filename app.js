@@ -31,6 +31,19 @@ function Init() {
     ctx: window.ctx,
   }
 
+  SGE.Loader.Add('inventory.js', function (inventary) {
+    App.inventary = new inventary();
+  });
+  SGE.Loader.Add('items.json', function (items) {
+    App.items = items;
+    App.inventary.setItems(items);
+
+    App.inventary.add(1);
+    App.inventary.add(2);
+
+    App.inventary.add(1001);
+  });
+
   var d = Date.now();
   SGE.Images.Preload({
     bg: 'http://img15.deviantart.net/df83/i/2015/075/1/c/rock_tile_a_by_hupie-d8lzed3.png',

@@ -143,15 +143,38 @@ function SceneConstructor(App) {
     pl.attack(ev.pageX, ev.pageY, hitzone);
   }
 
+  var mode = 'inv';
   var $inventary = $('#inventary');
+  var $mk = $inventary.find('#market');
+  var $inv = $inventary.find('#inv');
+  function closeMarket() {
+    $mk.hide();
+    mode = 'inv';
+  }
+  function openMarket() {
+    $mk.show();
+    mode = 'mkt';
+  }
   $('#pointsContainer').on('click', function() {
     SGE.GameLoop.Stop();
+    App.inventary.fill();
     SGE.ui.modal.Open($inventary, {
       '.close': function() {
-        SGE.ui.modal.Close($inventary, function() {
-          $inventary.find('.close').off();
-        });
-        SGE.GameLoop.Run(60);
+        if (mode == 'inv') {
+          SGE.ui.modal.Close($inventary, function() {
+            $inv.find('.close').off();
+            SGE.GameLoop.Run(60);
+            pl.setBonus(App.inventary.getBonus());
+          });
+        } else {
+          closeMarket();
+        }
+      },
+      '#market-button': function() {
+        openMarket();
+      },
+      '#market #items .item': function(ev) {
+        console.log('buy', ev);
       }
     }, function() {
       $inventary.find('#coins').html(pl.points);

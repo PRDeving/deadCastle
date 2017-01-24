@@ -16,15 +16,18 @@ SGE.classes.Player = function() {
   var mana = 100;
   var manaMax = 100;
   var manaRec = 1;
+  var manaSec = 0;
   
   var dead = false;
   var hp = 100;
   var hpMax = 100;
   var hpRec = 0;
+  var hpSec = 0;
+
+  var goldRec = 0;
+  var goldSec = 0;
 
   var strength = 100;
-
-  var pointsMod = 1;
 
   var tileS = 64;
   var animations = {
@@ -32,6 +35,15 @@ SGE.classes.Player = function() {
     attack: [1],
   }
 
+  function _setBonus(b) {
+    hpRec = b.hp;
+    hpSec = b.hpSec;
+    manaRec = b.mana;
+    manaSec = b.manaSec;
+    goldRec = b.gold;
+    goldSec = b.goldSec;
+    strength = 100 + b.strength;
+  }
 
   var tile = 0;
   var attacking = 0;
@@ -54,19 +66,19 @@ SGE.classes.Player = function() {
       if (path == 'center' || el.line == path) {
         el.dead();
 
-        if (mana + manaRec <= manaMax) {
+        if (manaRec > 0) {
           mana += manaRec;
           if (mana > manaMax) mana = manaMax;
           SGE.ui.poptag('+' + manaRec, 'mana', el.pos.x, el.pos.y);
         }
 
-        if (hpRec > 0 && hp + hpRec < hpMax) {
+        if (hpRec > 0) {
           hp += hpRec;
           if (hp > hpMax) hp = hpMax;
           SGE.ui.poptag('+' + hpRec, 'hp', el.pos.x, el.pos.y);
         }
 
-        pointsEarned = 10 * pointsMod;
+        pointsEarned = 10 + goldRec;
         points += pointsEarned;
         SGE.ui.poptag('+' + pointsEarned, 'gold', el.pos.x, el.pos.y);
         if (path != 'center') return;
@@ -140,5 +152,6 @@ SGE.classes.Player = function() {
   this.attack = _attack;
   this.hit = _hit;
   this.reset = _reset;
+  this.setBonus = _setBonus;
 }
 

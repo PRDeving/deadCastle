@@ -201,10 +201,26 @@
 
     #inventary .modal-container {
       height: 90%;
+      top: -90%;
     }
     #inventary.modal.active .modal-container{
       top:5%;
     }
+    #inventary #inv,
+    #inventary #market {
+      height: 90%;
+      width: 100%;
+      border-radius: 10px;
+    }
+    #inventary #market {
+      z-index: 10;
+      display: none;
+      background-color: white;
+      position: absolute;
+      top: 60px;
+      left: 0px;
+    }
+
     #inventary .close {
       position: absolute;
       font-size: 40px;
@@ -305,22 +321,31 @@
 
     <div id="inventary" class="modal">
       <div class="modal-container">
-        <div class="close">X</div>
-        <div id="coins"></div>
-        <div id="equipement">
-          <div id="armor" class="item"></div>
-          <div id="weapon" class="item"></div>
-          <div id="stats" class="item"></div>
-        </div>
-        <div id="items">
-          <div class="item"></div>
-          <div class="item"></div>
-          <div class="item"></div>
-          <div class="item"></div>
-          <div class="item"></div>
-        </div>
-        <div id="market-button">
-          <p>Go to market</p>
+        <div id=in-content">
+          <div id="inv">
+            <div class="close">X</div>
+            <div id="coins"></div>
+            <div id="equipement">
+              <div id="armor" class="item"></div>
+              <div id="weapon" class="item"></div>
+              <div id="stats" class="item"></div>
+            </div>
+            <div id="items">
+            </div>
+            <div id="market-button">
+              <p>Go to market</p>
+            </div>
+          </div>
+
+          <div id="market">
+            <div id="items">
+              <div class="item"></div>
+              <div class="item"></div>
+              <div class="item"></div>
+              <div class="item"></div>
+              <div class="item"></div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
