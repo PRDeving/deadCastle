@@ -6,10 +6,16 @@
 
   var ENGINE_PATH = "SGE/";
   var SGE = {};
+  var boostrapfn = {init: false, main: false};
+
+  function bootstrap(init, main) {
+    boostrapfn.init = main ? init : false;
+    boostrapfn.main = main ? main : init;
+  }
 
   // Load the script
   var script = document.createElement("script");
-  script.src = ENGINE_PATH+'/lib/jquery.js';
+  script.src = ENGINE_PATH + '/lib/jquery.js';
   script.type = 'text/javascript';
   document.getElementsByTagName("head")[0].appendChild(script);
 
@@ -48,15 +54,14 @@
           }
         });
 
-
         console.log("%c Main app: ", csstitle ,applicationjs);
 
         SGE.Loader.Add(applicationjs, function (d) {
-          var iret = d.Init();
+          var iret = boostrapfn.init();
 
           SGE.Loader.Run(function() {
             console.log("%c Iniciando aplicacion",csstitle)
-            d.Main(iret);
+            boostrapfn.main(iret);
           });
         }, true, true);
 
@@ -120,7 +125,7 @@
             ldc ++;
 
             if (app) {
-              ret = new (new Function(data + ((data.indexOf('Init') >= 0) ? 'this.Init = Init;': '') + ' this.Main = Main'))();
+              ret = (new Function(data))();
             } else if (cb) {
               switch (data[0]) {
                 case 'f':
@@ -189,12 +194,6 @@
   }
 
 
-
-
-
-
-
-
   //// CORE TOOLS
 
   function noDebug(msg){
@@ -223,16 +222,10 @@
       return false;
     }
   }
-  // function hasPackage(package){
-  //   if(Packages[package]){
-  //     return true;
-  //   }else{
-  //     return false;
-  //   }
-  // }
 
   SGE.hasModule = hasModule;
   SGE.NewModule = NewModule;
+  SGE.bootstrap = bootstrap;
 
   window.SGE = SGE;
 })();
