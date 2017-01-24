@@ -3,7 +3,6 @@
   "modules": [
     "scenemanager",
     "canvasmanager",
-    "structures",
     "gameloop",
     "mousemanager",
     "mediamanager"
