@@ -1,4 +1,4 @@
-SGE.Struct = new function(){
+SGE.NewModule('Struct', new function(){
     var self = this;
 
     var vec2 = function(_x,_y){
@@ -94,4 +94,4 @@ SGE.Struct = new function(){
 
     this.vec2 = vec2;
     this.vec3 = vec3;
-}
+});

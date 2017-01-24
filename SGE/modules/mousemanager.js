@@ -1,4 +1,4 @@
-SGE.Mouse = new function(){
+SGE.NewModule('Mouse', new function(){
     var X;
     var Y;
 
@@ -12,4 +12,4 @@ SGE.Mouse = new function(){
     }
 
     this.Position = _position;
-}
+});

@@ -1,4 +1,4 @@
-SGE.vec4 = function(_x,_y,_z,_w){
+SGE.NewModule('vec4', function(_x,_y,_z,_w){
     this.x = _x;
     this.y = _y;
     this.z = _z;
@@ -45,4 +45,4 @@ SGE.vec4 = function(_x,_y,_z,_w){
     }
 
     this.operate = _operate;
-}
+});

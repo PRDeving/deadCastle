@@ -1,5 +1,4 @@
-// MANAGER DE ESCENAS
-SGE.Scene = new function(){
+SGE.NewModule('Scene', new function(){
     var scenes = {};
     var loaded = [0,0];
     var current;
@@ -52,4 +51,4 @@ SGE.Scene = new function(){
     this.Load = _LoadScene;
     this.isLoaded = _isLoaded;
     this.__defineGetter__("current",function(){return current});
-};  // SCENE
+});  // SCENE

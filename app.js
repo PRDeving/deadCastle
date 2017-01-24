@@ -1,11 +1,17 @@
 function Init() {
-  SGE.Loader.Add([
-    'ui.js',
-    'utils.js',
-    'class/game.js',
-    'class/enemy.js',
-    'class/player.js',
-  ]);
+  // SGE.Loader.Add([
+  //   'ui.js',
+  //   'utils.js',
+  //   'class/game.js',
+  //   'class/enemy.js',
+  //   'class/player.js',
+  // ]);
+  //
+  SGE.Loader.Add({
+    'lol': 'config.json',
+  }, function (d) {
+    console.log('got', d);
+  });
 
   SGE.Scene.Add('menu', 'scenes/menu.js');
   SGE.Scene.Add('game', 'scenes/game.js');

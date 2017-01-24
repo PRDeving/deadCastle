@@ -1,4 +1,4 @@
-SGE.FullScreen = function(callback){
+SGE.NewModule('FullScreen', function(callback){
     var el = document.documentElement;
     var rfs = el.requestFullScreen ||
               el.webkitRequestFullScreen ||
@@ -8,4 +8,4 @@ SGE.FullScreen = function(callback){
     if(callback){
         callback();
     }
-};
+});

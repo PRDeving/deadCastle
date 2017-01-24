@@ -1,288 +1,238 @@
-var csstitle = "color: #333; font-size: 18px";
-var csssubtitle = "color: #555; font-size: 14px";
-var csssuccess = "color: #0f0; font-size: 14px";
-var csswarning = "color: #f00; font-size: 14px";
-
-var ENGINE_PATH = "SGE/";
-var SGE = {};
-
 (function(){
-    window.load = (function() {
+  var csstitle = "color: #333; font-size: 18px";
+  var csssubtitle = "color: #555; font-size: 14px";
+  var csssuccess = "color: #0f0; font-size: 14px";
+  var csswarning = "color: #f00; font-size: 14px";
 
-        // Load the script
-        var script = document.createElement("SCRIPT");
-        script.src = ENGINE_PATH+'/lib/jquery.js';
-        script.type = 'text/javascript';
-        document.getElementsByTagName("head")[0].appendChild(script);
+  var ENGINE_PATH = "SGE/";
+  var SGE = {};
 
-        var checkReady = function(callback) {
-            if (window.jQuery) {
-                callback(jQuery);
-            }else {
-                setTimeout(function() { checkReady(callback); }, 100);
-            }
-        };
+  // Load the script
+  var script = document.createElement("script");
+  script.src = ENGINE_PATH+'/lib/jquery.js';
+  script.type = 'text/javascript';
+  document.getElementsByTagName("head")[0].appendChild(script);
 
-        checkReady(function($) {
-            SGE.Loader = new _Loader();
+  var checkReady = function(callback) {
+    if (window.jQuery) {
+      callback(jQuery);
+    } else {
+      setTimeout(function() { checkReady(callback); }, 100);
+    }
+  };
 
-            //// Get packages Recipes from packages.json and store them in Packages
-            $.ajax({
-                url: ENGINE_PATH+"packages.json",
-                async: false,
-                success: function(data){
-                    Packages = data;
-                },
-                error: function(xhr, ajaxOptions, thrownError){
-                    if(xhr.status==404){
-                        console.log("%c no existe archivo de configuracion "+ENGINE_PATH+"packages.json", csswarning);
-                    }else if(xhr.status==200){
-                        console.log("%c Error en archivo de configuracion "+ENGINE_PATH+"packages.json", csswarning);
-                        console.log(thrownError);
-                    }
+  checkReady(function($) {
+    SGE.Loader = new _Loader_();
 
-                }
-            });
+    $.ajax({
+      url: 'config.json',
+      dataType: 'json',
+      async: false,
+      success: function(data){
+        Config = data;
+        SGE.Config = Config;
+        noDebug();
 
-            $.ajax({
-                url: 'config.json',
-                dataType: 'json',
-                async: false,
-                success: function(data){
-                    Config = data;
-                    SGE.Config = Config;
-                    noDebug();
+        console.log("%c Archivo de configuracion config.json cargado", csssuccess);
 
-                    console.log("%c Archivo de configuracion config.json cargado", csssuccess);
+        var mods = [];
+        for(var x in Config.modules){
+          mods.push(ENGINE_PATH + "modules/" + Config.modules[x] + ".js");
+        }
+        SGE.Loader.Add(mods, false, true);
 
-                    for(var x in Config.dependencies){
-                        SGE.Loader.Add(Config.dependencies);
-                    }
-                    for(var x in Config.modules){
-                        SGE.Loader.Add(ENGINE_PATH+"modules/" + Config.modules[x] + ".js");
-                    }
-                    for(var x in Config.packages){
-                        for(var y in Packages[Config.packages[x]]){
-                            SGE.Loader.Add(ENGINE_PATH+"modules/" + Packages[Config.packages[x]][y] + ".js");
-                        }
-                    }
-
-                    var applicationjs;
-
-                    $("script").each(function(){
-                        if($(this).attr("app")){
-                            applicationjs = $(this).attr("app");
-                        }
-                    });
-
-
-                    console.log("%c Main app: ", csstitle ,applicationjs);
-
-                    SGE.Loader.Add(applicationjs);
-                    SGE.Loader.Run([[function(){ 
-                        var initReturn = (window.Init)? Init() : {};
-                        delete Init;
-
-                        function checkScenes() {
-                          return SGE.Scene ? SGE.Scene.isLoaded : true;
-                        }
-                        
-
-                        var loop = setTimeout(function() {
-                          SGE.Loader.Run([[function(){
-                            delete SGE.Loader;
-                            console.log("%c Iniciando aplicacion",csstitle)
-                          },{}],[Main,initReturn]]);
-                        }, 100);
-
-                        if (!checkScenes()) loop();
-
-                    },{}]]);
-                },
-                error: function(xhr, ajaxOptions, thrownError){
-
-                    if(xhr.status==404){
-                        console.log("%c no existe archivo de configuracion config.json", csswarning);
-                    }else if(xhr.status==200){
-                        console.log("%c Error en archivo de configuracion config.json", csswarning);
-                        console.log(thrownError);
-                    }
-                }
-            });
+        var applicationjs;
+        $("script").each(function(){
+          if($(this).attr("app")){
+            applicationjs = $(this).attr("app");
+          }
         });
 
 
+        console.log("%c Main app: ", csstitle ,applicationjs);
+
+        SGE.Loader.Add(applicationjs, function (d) {
+          var iret = d.Init();
+
+          SGE.Loader.Run(function() {
+            console.log("%c Iniciando aplicacion",csstitle)
+            d.Main(iret);
+          });
+        }, true, true);
+
+        SGE.Loader.Run();
+      },
+
+      error: function(xhr, ajaxOptions, thrownError){
+        if(xhr.status==404){
+          console.log("%c no existe archivo de configuracion config.json", csswarning);
+        }else if(xhr.status==200){
+          console.log("%c Error en archivo de configuracion config.json", csswarning);
+          console.log(thrownError);
+        }
+      }
+    });
+  });
 
 
 
-    })();
 
+  // MODULO CARGADOR
+  //
+  // CARGA TODOS LOS ARCHIVOS PASADOS Y EJECUTA CALLBACK AL TERMINAR
 
+  function _Loader_() {
+    var loads = [];
+    var t = 0;
+    var tc = 0;
 
+    function _Add (scripts, callback, system, app) {
+      loads.push({
+        modules: (typeof scripts === 'string') ? [scripts] : scripts,
+        type: typeof scripts === 'object' ? 'object' : 'array',
+        callback: callback || false,
+        system: system || false,
+        app: app || false,
+      });
+      t++;
+    };
 
-    // MODULO CARGADOR
-    //
-    // CARGA TODOS LOS ARCHIVOS PASADOS Y EJECUTA CALLBACK AL TERMINAR
-    var _Loader = function(){
-        var loadertimeri;
-        var loaderror = false;
-        var engineLoad = true;
-        var modules = [];
-        var m = [];
-        var modulesLoaded = 0;
-        var done = false;
-        
-        var _AddModule = function(url){
-            if(typeof url === 'object'){
-                for(var x in url){
-                    modules.push(url[x]);
-                }
+    function _Run(donefn) {
+      var lo;
+
+      var mdt = 0;
+      var mdc = 0;
+
+      var ldt = 0;
+      var ldc = 0;
+
+      while (loads.length > 0) {
+        lo = loads[0];
+
+        var r = lo.type === 'object' ? {} : [];
+        ldt = lo.type === 'object' ? Object.keys(lo.modules).length : lo.modules.length;
+        mdt += ldt;
+
+        for (var m in lo.modules) {
+          _LoadModule(lo.modules[m], m, lo.system, lo.app, lo.callback, function(idx, data, app, cb) {
+            var ret;
+            mdc ++;
+            ldc ++;
+
+            if (app) {
+              ret = new (new Function(data + ((data.indexOf('Init') >= 0) ? 'this.Init = Init;': '') + ' this.Main = Main'))();
+            } else if (cb) {
+              switch (data[0]) {
+                case 'f':
+                  ret = new Function('return ' + data)();
+                  break;
+                case '[':
+                case '{':
+                  ret = JSON.parse(data);
+                  break;
+                case 'S':
+                  if (data.indexOf('SGE.NewModule') === 0)
+                    ret = new Function(data)();
+                  break;
+                default:
+                  ret = data;
+                  break;
+              }
+
+              if (ldt == ldc && cb) cb(r);
+
+            } else {
+              ret = (new Function(data))();
+            }
+
+            if (lo.type === 'object') r[idx] = ret;
+            else r.push(ret);
+
+            if (cb) cb(ret);
+            if (mdt == mdc && donefn) donefn();
+          });
+        }
+        loads.shift();
+      }
+
+      function _LoadModule(module, idx, system, app, fn, cb) {
+        $.ajax({
+          url: module,
+          dataType: 'text',
+          method: 'GET',
+          cache: Config.ModuleCache || false,
+
+          success: function(data){
+            console.log('%c Cargado: ' + this.url, csssuccess, mdc + 1,"/", mdt);
+            cb(idx, data, app, fn);
+          },
+          error: function(xhr, ajaxOptions, thrownError){
+            if(system){
+              console.log('%c Error cargando Modulos de sistema', csswarning);
             }else{
-                modules.push(url);
+              console.log('%c Error cargando dependencias de aplicacion \n', csswarning);
             }
-        };
 
-        var _LoadModule = function(i){
-            $.ajax({
-                url: m[i],
-                dataType: 'script',
-                cache: Config.ModuleCache || false,
-                success: function(){
-                    modulesLoaded++;
-                    console.log('%c Cargado: ' + this.url,
-                                csssuccess,modulesLoaded,"/",m.length);
-                    if(modulesLoaded === m.length){
-                        done = true;
-                    }
-                },
-                error: function(xhr, ajaxOptions, thrownError){
-                    if(engineLoad){
-                        console.log('%c Error cargando Modulos de sistema',
-                                    csswarning);
-                    }else{
-                        console.log('%c Error cargando dependencias de aplicacion \n',
-                                     csswarning);
-                    }
-
-                    if(xhr.status==404){
-                        console.log(this.url + " %c no existe", csswarning);
-                    }else if(xhr.status==200){
-                        console.log("%c Error en "+ this.url, csswarning);
-                        console.log(thrownError);
-                    }
-
-                    engineLoad = false;
-                    clearInterval(loadertimer);
-                    loadertimer = false;
-                }
-            });
-        };
-
-        var _Run = function(callback){
-            if(modules.length > 0){
-                for(var x in modules){
-                    m.push(modules[x]);
-                }
-                modules = [];
-                modules.length = 0;
-                modulesLoaded = 0;
-                done = false;
-                
-                for(var x = 0; x < m.length; x++){
-                    _LoadModule(x);
-                }
-
-                if(engineLoad){
-                    console.log("%c Carga modulos de sistema \n", csstitle, m);
-                }else{
-                    console.log("%c Carga dependencias de aplicacion \n", csstitle, m);
-                }
-
-                loadertimer = setInterval(function(){
-                    if(done){
-                        clearInterval(loadertimer);
-                        loadertimer = false;
-                        m = [];
-                        m.length = 0;
-                        if(engineLoad){
-                            console.log('%c Modulos de sistema cargados.', csssuccess);
-                        }else{
-                            console.log('%c Dependencias de aplicacion cargadas', csssuccess);
-                        }
-                        engineLoad = false;
-                        if(callback){
-                            for(var cba in callback){
-                                var cb = callback[cba][0];
-                                var arg = callback[cba][1];
-                                cb(arg);
-                            }
-                        }
-                    }
-                   
-                });
-            }else{
-                if(callback){
-                    for(var cba in callback){
-                        var cb = callback[cba][0];
-                        var arg = callback[cba][1];
-                        cb(arg);
-                    }
-                }
+            if(xhr.status==404){
+              console.log(this.url + " %c no existe", csswarning);
+            }else if(xhr.status==200){
+              console.log("%c Error en "+ this.url, csswarning);
+              console.log(thrownError);
             }
-        };
-
-        var _Done = function(){
-            return done;
-        };
-
-        this.Add = _AddModule;
-        this.Run = _Run;
-        this.Done = _Done;
-    };  // LOADER
-
-
-
-
-
-
-
-
-    //// CORE TOOLS
-
-    function noDebug(msg){
-        if(!Config.Debug ||  !console || !console.log){
-            if(SGE.Debugger){
-                delete SGE.Debugger;
-            }
-            oldConsoleLog = console.log;
-            window['console']['log'] = function() {};
-        }
+          }
+        });
+      }
     }
 
-    function NewModule(name, fn){
-        if(hasModule(name)) {
-            console.log("SGE already has an module called "+name);
-            return false;
-        } 
-        SGE.Config.modules.push(name);
-        SGE[name] = fn;
-    }
+    this.Add = _Add;
+    this.Run = _Run;
+  }
 
-    function hasModule(module){
-        if(SGE.Config.modules.indexOf(module) >= 0){
-            return true;
-        }else{
-            return false;
-        }
-    }
-    function hasPackage(package){
-        if(Packages[package]){
-            return true;
-        }else{
-            return false;
-        }
-    }
 
-    SGE.hasModule = hasModule;
-    SGE.NewModule = NewModule;
+
+
+
+
+
+
+  //// CORE TOOLS
+
+  function noDebug(msg){
+    if(!Config.Debug ||  !console || !console.log){
+      if(SGE.Debugger){
+        delete SGE.Debugger;
+      }
+      oldConsoleLog = console.log;
+      window['console']['log'] = function() {};
+    }
+  }
+
+  function NewModule(name, fn){
+    if(hasModule(name)) {
+      console.log("SGE already has an module called "+name);
+      return false;
+    } 
+    SGE.Config.modules.push(name);
+    SGE[name] = fn;
+  }
+
+  function hasModule(module){
+    if(SGE.Config.modules.indexOf(module) >= 0){
+      return true;
+    }else{
+      return false;
+    }
+  }
+  // function hasPackage(package){
+  //   if(Packages[package]){
+  //     return true;
+  //   }else{
+  //     return false;
+  //   }
+  // }
+
+  SGE.hasModule = hasModule;
+  SGE.NewModule = NewModule;
+
+  window.SGE = SGE;
 })();

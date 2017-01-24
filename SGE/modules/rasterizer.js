@@ -1,4 +1,4 @@
-SGE.Rasterizer = new function(){
+SGE.NewModule('Rasterizer', new function(){
     var self = this;
     var ctx;
     var data;
@@ -158,4 +158,4 @@ SGE.Rasterizer = new function(){
             window.con = true;
         }
     }
-};
+});

@@ -1,4 +1,4 @@
-SGE.Debugger = new function(){
+SGE.NewModule('Debugger', new function(){
     var $fdebugger;
 
     var _Init = function(){
@@ -33,4 +33,4 @@ SGE.Debugger = new function(){
 
     _Init();
     this.Log = _Log;
-};
+});

@@ -1,5 +1,4 @@
-// GAMELOOP
-SGE.GameLoop = new function(){
+SGE.NewModule('GameLoop', new function(){
     var priorize = [];
     var toExecute = [];
     var loop = null;
@@ -39,4 +38,4 @@ SGE.GameLoop = new function(){
     this.Run = _Run;
     this.Stop = _Stop;
     this.Clear = _Clear;
-};  //GAMELOOP
+});

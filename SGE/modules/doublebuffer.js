@@ -1,4 +1,4 @@
-SGE.DoubleBuffer = function(drawfunctions){
+SGE.NewModule('DoubleBuffer', function(drawfunctions){
     var dfs = drawfunctions || [];
 
     var backbuffer_c = document.createElement("canvas");
@@ -47,4 +47,4 @@ SGE.DoubleBuffer = function(drawfunctions){
     this.setDepthBuffer = function(db){_depthBuffer = db |0};
 
     return this;
-};
+});

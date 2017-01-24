@@ -1,4 +1,4 @@
-SGE.CanvasManager = new function(){
+SGE.NewModule('CanvasManager', new function(){
     var _canvas;
     var _ctx;
 
@@ -31,4 +31,4 @@ SGE.CanvasManager = new function(){
     }
 
     this.Init = _init;
-}
+});
