@@ -56,16 +56,18 @@
 
         console.log("%c Main app: ", csstitle ,applicationjs);
 
-        SGE.Loader.Add(applicationjs, function (d) {
-          var iret = boostrapfn.init();
+        SGE.Loader.Run(function() {
+          SGE.Loader.Add(applicationjs, function (d) {
+            var iret = boostrapfn.init();
 
-          SGE.Loader.Run(function() {
-            console.log("%c Iniciando aplicacion",csstitle)
-            boostrapfn.main(iret);
-          });
-        }, true, true);
+            SGE.Loader.Run(function() {
+              console.log("%c Iniciando aplicacion",csstitle)
+              boostrapfn.main(iret);
+            });
+          }, true, true);
+          SGE.Loader.Run();
+        });
 
-        SGE.Loader.Run();
       },
 
       error: function(xhr, ajaxOptions, thrownError){
