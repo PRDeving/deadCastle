@@ -1,19 +1,23 @@
 if (!SGE.classes) SGE.classes = {};
 if(!window.enPrerender) window.enPrerender = {};
 
-SGE.classes.Enemy = function(line) {
+SGE.classes.Enemy = function(line, constructor) {
+  console.log(constructor.lvl);
   var width = 40;
   var height = 40;
   var pos = SGE.utils.getSpawn(line);
   var rip = false;
-  var speed = 1;
+
+  var speed = constructor.speed;
+  var force = constructor.force;
+  var hp = constructor.hp;
+  var sprite = (line > 2 && line < 6) ? constructor.sprite + '2' : constructor.sprite;
 
   var line = line;
   var center = [canvas.width/2, canvas.height/2];
   var face = Math.atan2(center[1] - pos.y, center[0] - pos.x);
   if (!window.enPrerender[line]) window.enPrerender[line] = {};
 
-  var sprite = (line > 2 && line < 6) ? 'enemy2' : 'enemy';
   var spriteS = 32;
   var fps = 15;
   var tile = 0;
@@ -24,6 +28,15 @@ SGE.classes.Enemy = function(line) {
   }
   var animation = 'walk';
 
+  function _hit(d) {
+    hp -= d;
+    if (hp <= 0) {
+      _dead();
+      return true;
+    }
+    var t = ['ouch!', 'hay!', 'hit!', 'damn!'];
+    SGE.ui.poptag(t[Math.floor(Math.random() * t.length)], 'hit', pos.x, pos.y);
+  }
 
   function _dead() {
     speed = 0;
@@ -72,6 +85,7 @@ SGE.classes.Enemy = function(line) {
   this.render = _render;
   this.update = _update;
   this.dead = _dead;
+  this.hit = _hit;
   this.isDead = _isDead;
 
   this.width = width;
@@ -81,5 +95,5 @@ SGE.classes.Enemy = function(line) {
 
   this.__defineGetter__('line', function() { return line; });
   this.speed = speed;
-
+  this.force = force;
 }

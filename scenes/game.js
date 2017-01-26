@@ -3,41 +3,43 @@ function SceneConstructor(App) {
   $('#game').show();
 
   var start;
-  var game = new SGE.classes.Game(1);
-  var pl = new SGE.classes.Player();
-  var bg = game.renderBG(App.media);
-
-  App.game = game;
-  App.player = pl;
+  App.game.game = new SGE.classes.Game(1);
+  App.game.player = new SGE.classes.Player();
+  var bg = App.game.game.renderBG(App.media);
 
   var enemies = [];
   function spawn() {
-    var al = game.level > 4 ? 8 : (game.level > 1 ? 4 : 2);
+    var al = App.game.game.level > 4 ? 8 : (App.game.game.level > 1 ? 4 : 2);
     var els = Math.floor(Math.random() * al) + 1;
 
     var path;
+    var mobLvl;
     for (var i = 0; i < els; i++) {
+
+      mobLvl = Math.floor((Math.random() * Object.keys(App.game.enemies).length) - Object.keys(App.game.enemies).length + App.game.game.level - 3);
+      mobLvl = mobLvl < 0 ? 0 : (mobLvl >= Object.keys(App.game.enemies).length ? Object.keys(App.game.enemies).length - 1 : mobLvl);
+
       switch (al) {
         case 8:
           path = Math.floor(Math.random() * 8);
-          enemies.push(new SGE.classes.Enemy(path));
+          enemies.push(new SGE.classes.Enemy(path, App.game.enemies[mobLvl]));
           break;
         case 4:
           path = Math.floor(Math.random() * 4) * 2;
-          enemies.push(new SGE.classes.Enemy(path));
+          enemies.push(new SGE.classes.Enemy(path, App.game.enemies[mobLvl]));
           break;
         case 2:
           path = Math.floor(Math.random() * 2) * 4;
-          enemies.push(new SGE.classes.Enemy(path));
+          enemies.push(new SGE.classes.Enemy(path, App.game.enemies[mobLvl]));
           break;
       }
     }
   }
 
-  var llevel = game.level;
-  var lpoints = pl.points;
-  var lhp = pl.hp;
-  var lmana = pl.mana;
+  var llevel = App.game.game.level;
+  var lpoints = App.game.player.points;
+  var lhp = App.game.player.hp;
+  var lmana = App.game.player.mana;
   var hitzone = [];
 
   var tpoints = 0;
@@ -45,28 +47,28 @@ function SceneConstructor(App) {
   SGE.GameLoop.Suscribe(function() {
     hitzone.length = 0;
 
-    if (lpoints != pl.points) {
-      tpoints += +pl.points - lpoints;
-      lpoints = +pl.points;
-      App.$points.html(pl.points);
+    if (lpoints != App.game.player.points) {
+      tpoints += +App.game.player.points - lpoints;
+      lpoints = +App.game.player.points;
+      App.$points.html(App.game.player.points);
 
-      if (tpoints > (1000 * game.level) * 1.2) {
-        game.levelUp();
+      if (tpoints > (1000 * App.game.game.level) * 1.2) {
+        App.game.game.levelUp();
         SGE.ui.poptag('Level Up', 'level');
       }
     }
-    if (game.level != llevel) {
+    if (App.game.game.level != llevel) {
       llevel++;
-      bg = game.renderBG(App.media);
-      App.$level.html(game.level);
+      bg = App.game.game.renderBG(App.media);
+      App.$level.html(App.game.game.level);
     }
-    if (lhp != pl.hp) {
-      lhp = +pl.hp;
-      App.$hp.html(pl.hp);
+    if (lhp != App.game.player.hp) {
+      lhp = +App.game.player.hp;
+      App.$hp.html(App.game.player.hp);
     }
-    if (lmana != pl.mana) {
-      lmana = +pl.mana;
-      App.$mana.html(pl.mana);
+    if (lmana != App.game.player.mana) {
+      lmana = +App.game.player.mana;
+      App.$mana.html(App.game.player.mana);
     }
   }, true);
 
@@ -87,36 +89,36 @@ function SceneConstructor(App) {
 
       e.update();
       distance = Math.sqrt(Math.abs(Math.pow(e.pos.x - canvas.width/2, 2) + Math.pow(e.pos.y - canvas.height/2, 2)));
-      if (distance <= Math.sqrt(Math.abs(Math.pow(pl.range, 2) + Math.pow(pl.range, 2)))) {
+      if (distance <= Math.sqrt(Math.abs(Math.pow(App.game.player.range, 2) + Math.pow(App.game.player.range, 2)))) {
         hitzone.push(e);
       }
 
       if (distance < Math.sqrt(Math.abs(Math.pow(40, 2) + Math.pow(40, 2)))) {
         hitcount--;
         if (hitcount < 0) {
-          hitcount = pl.strength;
+          hitcount = App.game.player.strength;
 
           // handle
-          pl.hit(1);
+          App.game.player.hit(e.force);
         }
       } else {
         App.ctx.drawImage(e.render(App.media), e.pos.x - e.width/2, e.pos.y - e.height/2);
       }
     }
 
-    pl.update();
-    App.ctx.drawImage(pl.render(App.media), pl.pos.x, pl.pos.y);
+    App.game.player.update();
+    App.ctx.drawImage(App.game.player.render(App.media), App.game.player.pos.x, App.game.player.pos.y);
     SGE.ui.digestPoptag();
 
-    if (pl.dead) {
+    if (App.game.player.dead) {
       SGE.GameLoop.Stop();
 
       SGE.ui.modal.Open(App.$keepPlaying, {
         '.yes': function() {
           SGE.ui.modal.Close(App.$keepPlaying);
-          pl.reset();
-          App.$hp.html(pl.hp);
-          App.$mana.html(pl.mana);
+          App.game.player.reset();
+          App.$hp.html(App.game.player.hp);
+          App.$mana.html(App.game.player.mana);
           SGE.utils.countdown(3, function() {
             SGE.GameLoop.Run(60);
           });
@@ -131,8 +133,8 @@ function SceneConstructor(App) {
 
   var counticks = 0;
   SGE.GameLoop.Suscribe(function() {
-    counticks += game.level;
-    if (counticks > 60 * game.level) {
+    counticks += App.game.game.level;
+    if (counticks > 60 * App.game.game.level) {
       counticks = 0;
       spawn();
     }
@@ -140,7 +142,7 @@ function SceneConstructor(App) {
 
   $(canvas).on('click', keyboardHandler);
   function keyboardHandler(ev) {
-    pl.attack(ev.pageX, ev.pageY, hitzone);
+    App.game.player.attack(ev.pageX, ev.pageY, hitzone);
   }
 
   var mode = 'inv';
@@ -158,13 +160,14 @@ function SceneConstructor(App) {
   $('#pointsContainer').on('click', function() {
     SGE.GameLoop.Stop();
     App.inventary.fill();
+    App.market.fill();
     SGE.ui.modal.Open($inventary, {
       '.close': function() {
         if (mode == 'inv') {
           SGE.ui.modal.Close($inventary, function() {
             $inv.find('.close').off();
             SGE.GameLoop.Run(60);
-            pl.setBonus(App.inventary.getBonus());
+            App.game.player.setBonus(App.inventary.getBonus());
           });
         } else {
           closeMarket();
@@ -172,22 +175,19 @@ function SceneConstructor(App) {
       },
       '#market-button': function() {
         openMarket();
-      },
-      '#market #items .item': function(ev) {
-        console.log('buy', ev);
       }
     }, function() {
-      $inventary.find('#coins').html(pl.points);
+      $inventary.find('#coins').html(App.game.player.points);
     });
   });
 
   App.ctx.drawImage(bg, 0, 0);
-  App.ctx.drawImage(pl.render(App.media), pl.pos.x, pl.pos.y);
+  App.ctx.drawImage(App.game.player.render(App.media), App.game.player.pos.x, App.game.player.pos.y);
 
-  App.$points.html(pl.points);
-  App.$level.html(game.level);
-  App.$hp.html(pl.hp);
-  App.$mana.html(pl.mana);
+  App.$points.html(App.game.player.points);
+  App.$level.html(App.game.game.level);
+  App.$hp.html(App.game.player.hp);
+  App.$mana.html(App.game.player.mana);
 
   SGE.utils.countdown(3, function() {
     start = Date.now();

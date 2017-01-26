@@ -1,9 +1,9 @@
-(function(){
-  var csstitle = "color: #333; font-size: 18px";
-  var csssubtitle = "color: #555; font-size: 14px";
-  var csssuccess = "color: #0f0; font-size: 14px";
-  var csswarning = "color: #f00; font-size: 14px";
+var csstitle = "color: #333; font-size: 18px";
+var csssubtitle = "color: #555; font-size: 14px";
+var csssuccess = "color: #0f0; font-size: 14px";
+var csswarning = "color: #f00; font-size: 14px";
 
+(function(){
   var ENGINE_PATH = "SGE/";
   var SGE = {};
   var boostrapfn = {init: false, main: false};

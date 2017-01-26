@@ -220,6 +220,15 @@
       top: 60px;
       left: 0px;
     }
+    #inventary #market #items .item.selected {
+      background-color: blue;
+    }
+    #inventary #market #desc > p {
+      height: 50px;
+    }
+    #inventary #market #desc {
+      padding: 10px 30px;
+    }
 
     #inventary .close {
       position: absolute;
@@ -339,11 +348,13 @@
 
           <div id="market">
             <div id="items">
-              <div class="item"></div>
-              <div class="item"></div>
-              <div class="item"></div>
-              <div class="item"></div>
-              <div class="item"></div>
+            </div>
+            <div id="desc">
+              <h2 id="name"></h2>
+              <p id="description"></p>
+              <div id="market-button">
+                <p>Buy for <span id="cost"></span></p>
+              </div>
             </div>
           </div>
         </div>

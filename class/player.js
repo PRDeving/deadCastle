@@ -61,26 +61,27 @@ SGE.classes.Player = function() {
 
     var el;
     for (var i = 0; i < hitzone.length; i++) {
+      var dead = false;
       el = hitzone[i];
 
       if (path == 'center' || el.line == path) {
-        el.dead();
+        if (el.hit(1)) {
+          if (manaRec > 0) {
+            mana += manaRec;
+            if (mana > manaMax) mana = manaMax;
+            SGE.ui.poptag('+' + manaRec, 'mana', el.pos.x, el.pos.y);
+          }
 
-        if (manaRec > 0) {
-          mana += manaRec;
-          if (mana > manaMax) mana = manaMax;
-          SGE.ui.poptag('+' + manaRec, 'mana', el.pos.x, el.pos.y);
+          if (hpRec > 0) {
+            hp += hpRec;
+            if (hp > hpMax) hp = hpMax;
+            SGE.ui.poptag('+' + hpRec, 'hp', el.pos.x, el.pos.y);
+          }
+
+          pointsEarned = 10 + goldRec;
+          points += pointsEarned;
+          SGE.ui.poptag('+' + pointsEarned, 'gold', el.pos.x, el.pos.y);
         }
-
-        if (hpRec > 0) {
-          hp += hpRec;
-          if (hp > hpMax) hp = hpMax;
-          SGE.ui.poptag('+' + hpRec, 'hp', el.pos.x, el.pos.y);
-        }
-
-        pointsEarned = 10 + goldRec;
-        points += pointsEarned;
-        SGE.ui.poptag('+' + pointsEarned, 'gold', el.pos.x, el.pos.y);
         if (path != 'center') return;
       }
     }

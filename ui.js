@@ -53,7 +53,7 @@ SGE.NewModule('ui', new function() {
   _poptag = function(msg, cls, x ,y) {
     setTimeout(function() {
       _poptagStack.push(new _cpoptag(msg, cls, x, y));
-    }, Math.floor(Math.random() * 750));
+    }, Math.floor(Math.random() * 250));
   }
 
   _cpoptag = function(msg, cls, x, y) {
@@ -70,7 +70,7 @@ SGE.NewModule('ui', new function() {
     this.off = cx.measureText(msg);
     var speed = Math.floor(Math.random() * 3);
 
-    this.x = x ? (x - width / 2) : 0;
+    this.x = (x ? (x - width / 2) : 0) + (Math.floor(Math.random() * 30) - 15);
     this.y = y ? y : (canvas.height / 2 - 30);
     this.alpha = 1.01;
     //
@@ -92,6 +92,10 @@ SGE.NewModule('ui', new function() {
         break;
       case "hp":
         cx.fillStyle = "#e43636";
+        cx.strokeStyle = "black";
+        break;
+      case "hit":
+        cx.fillStyle = "#b3055d";
         cx.strokeStyle = "black";
         break;
     }
@@ -118,9 +122,6 @@ SGE.NewModule('ui', new function() {
   }
 
   _digestPoptag = function() {
-    // SGE.Debugger.Log({
-    //   'lols': _poptagStack.length,
-    // });
     var pt;
     for (var i = 0; i < _poptagStack.length; i++) {
       pt = _poptagStack[i];
