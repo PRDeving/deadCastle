@@ -41,13 +41,13 @@ function Init() {
     App.market = new market();
   });
 
-  SGE.Loader.Add('items.json', function (items) {
+  SGE.Loader.Add('resources/items.json', function (items) {
     App.game.items = items;
     App.inventary.setItems(items);
     App.market.setItems(items);
   });
 
-  SGE.Loader.Add('enemies.json', function (enemies) {
+  SGE.Loader.Add('resources/enemies.json', function (enemies) {
     App.game.enemies = enemies;
   });
 
