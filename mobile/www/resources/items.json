@@ -1,0 +1,140 @@
+{
+  "0": {
+    "id": 0,
+    "block": 0,
+    "name": "cacerolo",
+    "description": "algo es algo... [+5 oro] por muerte",
+    "hp": 0,
+    "mana": 0,
+    "hpSec": 0,
+    "manaSec": 0,
+    "gold": 5,
+    "goldSec": 0,
+    "cost": 100,
+    "sell": 4
+  },
+  "1": {
+    "id": 1,
+    "block": 0,
+    "name": "palo largo",
+    "description": "pincho ojo, pincho ojo, pincho ojo... [+10 oro][+1 mana] por muerte",
+    "hp": 0,
+    "mana": 1,
+    "hpSec": 0,
+    "manaSec": 0,
+    "gold": 10,
+    "goldSec": 0,
+    "cost": 150,
+    "sell": 30
+  },
+  "2": {
+    "id": 2,
+    "block": 0,
+    "name": "espada",
+    "description": "serious business, [+1 HP][+1 mana][+10 oro] por muerte",
+    "hp": 1,
+    "mana": 1,
+    "hpSec": 0,
+    "manaSec": 0,
+    "gold": 10,
+    "goldSec": 0,
+    "cost": 400,
+    "sell": 50
+  },
+  
+
+
+  "1001": {
+    "id": 1001,
+    "block": 1,
+    "name": "saco de harpillera",
+    "description": "algo mejor que en bolas, ¿no crees? [+20 resistencia]",
+    "hp": 0,
+    "mana": 0,
+    "hpSec": 0,
+    "manaSec": 0,
+    "gold": 0,
+    "goldSec": 1,
+    "strength": 20,
+    "cost": 400,
+    "sell": 50
+  },
+
+
+  "2001": {
+    "id": 2001,
+    "block": 2,
+    "name": "pocion HP",
+    "description": "Recupera 50 HP",
+    "hp": 50,
+    "mana": 0,
+    "hpSec": 0,
+    "manaSec": 0,
+    "hpMax": 0,
+    "manaMax": 0,
+    "strength": 0,
+    "cost": 1000,
+    "sell": 500
+  },
+  "2002": {
+    "id": 2002,
+    "block": 2,
+    "name": "pocion mana",
+    "description": "recupera 50 mana",
+    "hp": 0,
+    "mana": 50,
+    "hpSec": 0,
+    "manaSec": 0,
+    "hpMax": 0,
+    "manaMax": 0,
+    "strength": 0,
+    "cost": 1000,
+    "sell": 500
+  },
+  "2003": {
+    "id": 2003,
+    "block": 2,
+    "name": "pocion resistencia",
+    "description": "añade 50 de resistencia",
+    "hp": 0,
+    "mana": 0,
+    "hpSec": 0,
+    "manaSec": 0,
+    "hpMax": 0,
+    "manaMax": 0,
+    "strength": 50,
+    "cost": 1000,
+    "sell": 500
+  },
+  "2004": {
+    "id": 2004,
+    "block": 2,
+    "name": "pocion max HP",
+    "description": "añade 50 de vida máxima",
+    "hp": 0,
+    "mana": 0,
+    "hpSec": 0,
+    "manaSec": 0,
+    "hpMax": 50,
+    "manaMax": 0,
+    "strength": 0,
+    "cost": 3000,
+    "sell": 100
+  },
+  "2005": {
+    "id": 2005,
+    "block": 2,
+    "name": "pocion max mana",
+    "description": "añade 50 de mana maximo",
+    "hp": 0,
+    "mana": 0,
+    "hpSec": 0,
+    "manaSec": 0,
+    "hpMax": 0,
+    "manaMax": 50,
+    "strength": 0,
+    "cost": 3000,
+    "sell": 100
+  }
+
+}

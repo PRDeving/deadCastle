@@ -1,49 +1,377 @@
-<!DOCTYPE html>
-<!--
-    Licensed to the Apache Software Foundation (ASF) under one
-    or more contributor license agreements.  See the NOTICE file
-    distributed with this work for additional information
-    regarding copyright ownership.  The ASF licenses this file
-    to you under the Apache License, Version 2.0 (the
-    "License"); you may not use this file except in compliance
-    with the License.  You may obtain a copy of the License at
+<head>
+  <link href="https://fonts.googleapis.com/css?family=VT323" rel="stylesheet">
+  <style>
+    /* font-family: 'VT323', monospace; */
+    *, p, a, i, span, label, div {
+      font-family: 'VT323', monospace;
+    }
 
-    http://www.apache.org/licenses/LICENSE-2.0
+    document,
+    body {
+      width: 100%;
+      height: 100%;
+      padding: 0;
+      margin: 0;
+    }
+    canvas {
+      background-color: black;
+    }
+    section {
+      width: 100%;
+      height: 100%;
+      position: fixed;
+      top: 0;
+      left: 0;
+      display: none;
+    }
+    #countdown {
+      text-align: center;
+      padding-top: 200px;
+      z-index: 8;
 
-    Unless required by applicable law or agreed to in writing,
-    software distributed under the License is distributed on an
-    "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
-     KIND, either express or implied.  See the License for the
-    specific language governing permissions and limitations
-    under the License.
--->
-<html>
-    <head>
-        <!--
-        Customize this policy to fit your own app's needs. For more guidance, see:
-            https://github.com/apache/cordova-plugin-whitelist/blob/master/README.md#content-security-policy
-        Some notes:
-            * gap: is required only on iOS (when using UIWebView) and is needed for JS->native communication
-            * https://ssl.gstatic.com is required only on Android and is needed for TalkBack to function properly
-            * Disables use of inline scripts in order to mitigate risk of XSS vulnerabilities. To change this:
-                * Enable inline JS: add 'unsafe-inline' to default-src
-        -->
-        <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; media-src *; img-src 'self' data: content:;">
-        <meta name="format-detection" content="telephone=no">
-        <meta name="msapplication-tap-highlight" content="no">
-        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
-        <link rel="stylesheet" type="text/css" href="css/index.css">
-        <title>Hello World</title>
-    </head>
-    <body>
-        <div class="app">
-            <h1>Apache Cordova</h1>
-            <div id="deviceready" class="blink">
-                <p class="event listening">Connecting to Device</p>
-                <p class="event received">Device is Ready</p>
-            </div>
+      color: white;
+      font-size: 130px;
+      font-weight: bold;
+      text-shadow: 2px 0 0 #000, -2px 0 0 #000, 0 2px 0 #000, 0 -2px 0 #000, 1px 1px #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000;
+    }
+    #loading {
+      z-index: 9;
+      background-color: white;
+
+      text-align: center;
+      padding-top: 40%;
+      font-size: 60px;
+      font-weight: bold;
+      color: white;
+      text-shadow: 2px 0 0 #000, -2px 0 0 #000, 0 2px 0 #000, 0 -2px 0 #000, 1px 1px #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000;
+    }
+    #menu {
+      background-color: #ECECEC;
+    }
+    .poptag {
+      position: absolute;
+      /* transition: top 3s; */
+      transition: top 4s, font-size 1s;
+      top: 50%;
+      z-index: 4;
+      width: 100%;
+      height: 40px;
+      text-align: center;
+
+      color: white;
+      font-size: 14px;
+      font-weight: bold;
+      text-shadow: 2px 0 0 #000, -2px 0 0 #000, 0 2px 0 #000, 0 -2px 0 #000, 1px 1px #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000;
+    }
+    .poptag.grow {
+      font-size: 30px !important;
+    }
+    .poptag.move {
+      top: 0 !important;
+    }
+    #pointsContainer {
+      position: absolute;
+      top: 10px;
+      left: 15px;
+    }
+    #crate {
+      width: 45px;
+      height: 50px;
+      margin-right: 10px;
+      display: inline-block;
+      background-image: url("http://vignette2.wikia.nocookie.net/clubpenguin/images/2/22/Treasure_Chest_(2011).png/revision/latest?cb=20150213234158");
+      background-size: 100%;
+      background-position: center center;
+      background-repeat: no-repeat;
+    }
+    #points {
+      text-align: left;
+      display: inline-block;
+      vertical-align: top;
+      padding-top: 5px;
+      font-size: 40px;
+      font-weight: bold;
+      color: #f3bf4c;
+      text-shadow: 2px 0 0 #000, -2px 0 0 #000, 0 2px 0 #000, 0 -2px 0 #000, 1px 1px #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000;
+    }
+    #level {
+      font-size: 30px;
+      color: #f19e34;
+    }
+    #level::before {
+      content: 'Level ';
+      font-size: 30px;
+      color: #f19e34;
+    }
+    #hpContainer {
+      position: absolute;
+      right: 10px;
+      top: 10px;
+      width: 100px;
+      height: 8px;
+      border: 3px solid black;
+    }
+    #manaContainer {
+      position: absolute;
+      right: 10px;
+      top: 26px;
+      width: 100px;
+      height: 8px;
+      border: 3px solid black;
+    }
+    #hp {
+      position: absolute;
+      top: 10px;
+      right: 40px;
+      height: 30px;
+      font-size: 40px;
+      font-weight: bold;
+      color: #e43636;
+      text-shadow: 2px 0 0 #000, -2px 0 0 #000, 0 2px 0 #000, 0 -2px 0 #000, 1px 1px #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000;
+    }
+    #hp::after {
+      content: '';
+      position: absolute;
+      top: 5px;
+      right: -30px;
+      width: 30px;
+      height: 30px;
+      background-image: url(http://static.tumblr.com/ff8de7deab4afdc484bc1b1aa9637491/wgkduij/Ofrnuboji/tumblr_static_a687gc2kt5skgc08o0wk0080o.png);
+      background-position: center center;
+      background-size: 100% 100%;
+    }
+    #mana {
+      position: absolute;
+      top: 45px;
+      right: 40px;
+      height: 30px;
+      font-size: 30px;
+      font-weight: bold;
+      color: #6163e0;
+      text-shadow: 2px 0 0 #000, -2px 0 0 #000, 0 2px 0 #000, 0 -2px 0 #000, 1px 1px #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000;
+    }
+    #mana::after {
+      content: '';
+      position: absolute;
+      top: 5px;
+      right: -25px;
+      width: 20px;
+      height: 20px;
+      background-image: url(img/mana.png);
+      background-position: center center;
+      background-size: 100% 100%;
+    }
+
+    .modal {
+      width: 100%;
+      height: 100%;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 8;
+      display: none;
+
+      background-color: rgba(0, 0, 0, 0.3);
+    }
+    .modal-container {
+      width: 90%;
+      height: 40%;
+
+      position: absolute;
+      top: -50%;
+      left: 5%;
+      transition: top 1s;
+
+      background-color: white;
+      border-radius: 10px;
+    }
+    .modal.active .modal-container {
+      top: 30%;
+    }
+    .modal-container .buttons {
+      text-align: center;
+    }
+    .modal-container .button {
+      width: 80px;
+      margin: 30px;
+      text-align: center;
+      padding-top: 20px;
+      display: inline-block;
+    }
+
+    #inventary .modal-container {
+      height: 90%;
+      top: -90%;
+    }
+    #inventary.modal.active .modal-container{
+      top:5%;
+    }
+    #inventary #inv,
+    #inventary #market {
+      height: 90%;
+      width: 100%;
+      border-radius: 10px;
+    }
+    #inventary #market {
+      z-index: 10;
+      display: none;
+      background-color: white;
+      position: absolute;
+      top: 60px;
+      left: 0px;
+    }
+    #inventary #market #items .item.selected {
+      background-color: blue;
+    }
+    #inventary #market #desc > p {
+      height: 50px;
+    }
+    #inventary #market #desc {
+      padding: 10px 30px;
+    }
+
+    #inventary .close {
+      position: absolute;
+      font-size: 40px;
+      top: -20px;
+      right: 0px;
+      color: white;
+      font-weight: bold;
+      text-shadow: 2px 0 0 #000, -2px 0 0 #000, 0 2px 0 #000, 0 -2px 0 #000, 1px 1px #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000;
+    }
+    #inventary #coins {
+      position: absolute;
+      top: -20px;
+      left: 45px;
+      font-size: 60px;
+      color: #f3bf4c;
+      font-weight: bold;
+      text-shadow: 2px 0 0 #000, -2px 0 0 #000, 0 2px 0 #000, 0 -2px 0 #000, 1px 1px #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000;
+    }
+    #inventary #coins::before {
+      content: '';
+      width: 40px;
+      height: 40px;
+      position: absolute;
+      background-image: url("http://vignette2.wikia.nocookie.net/clubpenguin/images/2/22/Treasure_Chest_(2011).png/revision/latest?cb=20150213234158");
+      background-size: 100%;
+      background-repeat: no-repeat;
+      top: 25px;
+      left: -40px;
+    }
+    #inventary #items {
+      height: 40%;
+      overflow-y:scroll;
+    }
+    .item {
+      width: 32%;
+      height: 100px;
+      margin-left: 1%;
+      margin-top: 1%;
+      float: left;
+      background-color: grey;
+    }
+    #inventary #equipement {
+      height: 30%;
+      width: 100%;
+      margin-bottom: 20px;
+      margin-top: 60px;
+    }
+    #inventary #market-button,
+    #inventary #buy-button {
+      width: 200px;
+      height: 40px;
+      text-align: center;
+      margin: auto auto;
+      background-color: orange;
+
+      -webkit-box-shadow: 3px 3px 5px 0px rgba(0,0,0,0.75);
+      -moz-box-shadow: 3px 3px 5px 0px rgba(0,0,0,0.75);
+      box-shadow: 3px 3px 5px 0px rgba(0,0,0,0.75);
+
+      cursor: pointer;
+    }
+    #inventary #market-button::hover,
+    #inventary #market-button::active,
+    #inventary #buy-button::hover,
+    #inventary #buy-button::active {
+      background-color: #ffbb3e;
+
+      -webkit-box-shadow: 3px 3px 5px 0px rgba(0,0,0,0.85);
+      -moz-box-shadow: 3px 3px 5px 0px rgba(0,0,0,0.85);
+      box-shadow: 3px 3px 5px 0px rgba(0,0,0,0.85);
+    }
+    #inventary #market-button p,
+    #inventary #buy-button p {
+      color: white;
+      padding: 5px;
+      font-size: 30px;
+      text-shadow: 2px 0 0 #000, -2px 0 0 #000, 0 2px 0 #000, 0 -2px 0 #000, 1px 1px #000, -1px -1px 0 #000, 1px -1px 0 #000, -1px 1px 0 #000;
+    }
+  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+  <section id="countdown">
+  </section>
+  <section id="loading">
+    LOADING
+  </section>
+  <section id="menu">
+    <p id="go">Go</p>
+  </section>
+  <section id="game">
+
+    <div id="keepPlaying" class="modal">
+      <div class="modal-container">
+        <div><p>Keep playing</p></div>
+        <div class="buttons">
+          <div class="yes button"><p>yes</p></div>
+          <div class="no button"><p>no</p></div>
         </div>
-        <script type="text/javascript" src="cordova.js"></script>
-        <script type="text/javascript" src="js/index.js"></script>
-    </body>
-</html>
+      </div>
+    </div>
+
+    <div id="inventary" class="modal">
+      <div class="modal-container">
+        <div id=in-content">
+          <div id="inv">
+            <div class="close">X</div>
+            <div id="coins"></div>
+            <div id="equipement">
+              <div id="armor" class="item"></div>
+              <div id="weapon" class="item"></div>
+              <div id="stats" class="item"></div>
+            </div>
+            <div id="items">
+            </div>
+            <div id="market-button">
+              <p>Go to market</p>
+            </div>
+          </div>
+
+          <div id="market">
+            <div id="items">
+            </div>
+            <div id="desc">
+              <h2 id="name"></h2>
+              <p id="description"></p>
+              <div id="buy-button">
+                <p>Buy for <span id="cost"></span></p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="pointsContainer">
+      <div id="crate"></div><div id="points"></div>
+      <div id="level"></div>
+    </div>
+    <div id="hp"></div>
+    <div id="mana"></div>
+    <canvas id="gameCanvas"></canvas>
+  </section>
+  <script app="app.js" src="SGE/engine.js"></script>
+</body>
