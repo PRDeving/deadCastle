@@ -7,6 +7,7 @@ function Inventory() {
 
   function _add(e) {
     items.push(itemsList[e]);
+    _fill();
   }
 
   function _equip(e) {

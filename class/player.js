@@ -45,6 +45,14 @@ SGE.classes.Player = function() {
     strength = 100 + b.strength;
   }
 
+  function _pay(a) {
+    if (points - a >= 0) {
+      points -= a;
+      return true;
+    }
+    return false;
+  }
+
   var tile = 0;
   var attacking = 0;
   var pointsEarned;
@@ -154,5 +162,6 @@ SGE.classes.Player = function() {
   this.hit = _hit;
   this.reset = _reset;
   this.setBonus = _setBonus;
+  this.pay = _pay;
 }
 

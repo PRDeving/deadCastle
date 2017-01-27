@@ -277,7 +277,8 @@
       margin-bottom: 20px;
       margin-top: 60px;
     }
-    #inventary #market-button {
+    #inventary #market-button,
+    #inventary #buy-button {
       width: 200px;
       height: 40px;
       text-align: center;
@@ -291,14 +292,17 @@
       cursor: pointer;
     }
     #inventary #market-button::hover,
-    #inventary #market-button::active {
+    #inventary #market-button::active,
+    #inventary #buy-button::hover,
+    #inventary #buy-button::active {
       background-color: #ffbb3e;
 
       -webkit-box-shadow: 3px 3px 5px 0px rgba(0,0,0,0.85);
       -moz-box-shadow: 3px 3px 5px 0px rgba(0,0,0,0.85);
       box-shadow: 3px 3px 5px 0px rgba(0,0,0,0.85);
     }
-    #inventary #market-button p {
+    #inventary #market-button p,
+    #inventary #buy-button p {
       color: white;
       padding: 5px;
       font-size: 30px;
@@ -352,7 +356,7 @@
             <div id="desc">
               <h2 id="name"></h2>
               <p id="description"></p>
-              <div id="market-button">
+              <div id="buy-button">
                 <p>Buy for <span id="cost"></span></p>
               </div>
             </div>

@@ -6,6 +6,7 @@ function Market() {
   var $description = $desc.find('#description');
   var $cost = $desc.find('#cost');
   var items;
+  var selected;
 
   function _setItems(it) {
     items = it;
@@ -14,18 +15,19 @@ function Market() {
   function _select(ev) {
     var $el = $(ev.target);
     var idx = $el.attr('data-id');
-    var i = items[idx];
+    selected = items[idx];
 
     $list.find('.selected').removeClass('selected');
     $el.addClass('selected');
     $desc.show();
-    $name.html(i.name)
-    $description.html(i.description);
-    $cost.html(i.cost);
+    $name.html(selected.name)
+    $description.html(selected.description);
+    $cost.html(selected.cost);
   }
 
-  function _buy(ev) {
-
+  function _buyIt(pl) {
+    if (!selected) return false;
+    return (pl.pay(selected.cost)) ? selected.id : -1;
   }
 
   function _newEl(e) {
@@ -42,4 +44,5 @@ function Market() {
 
   this.setItems = _setItems;
   this.fill = _fill;
+  this.buyIt = _buyIt;
 }

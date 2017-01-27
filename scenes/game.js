@@ -175,6 +175,11 @@ function SceneConstructor(App) {
       },
       '#market-button': function() {
         openMarket();
+      },
+      '#buy-button': function() {
+        var bought = App.market.buyIt(App.game.player);
+        if (bought != -1) App.inventary.add(bought);
+        $inventary.find('#coins').html(App.game.player.points);
       }
     }, function() {
       $inventary.find('#coins').html(App.game.player.points);

@@ -36,21 +36,17 @@ function Init() {
   SGE.Loader.Add('inventory.js', function (inventary) {
     App.inventary = new inventary();
   });
+
   SGE.Loader.Add('market.js', function (market) {
     App.market = new market();
   });
+
   SGE.Loader.Add('items.json', function (items) {
     App.game.items = items;
     App.inventary.setItems(items);
-
-    App.inventary.add(1);
-    App.inventary.add(2);
-
-    App.inventary.add(1001);
-  });
-  SGE.Loader.Add('market.json', function (items) {
     App.market.setItems(items);
   });
+
   SGE.Loader.Add('enemies.json', function (enemies) {
     App.game.enemies = enemies;
   });
