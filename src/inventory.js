@@ -12,6 +12,7 @@ function Inventory() {
   }
 
   function _use(e) {
+    console.log('use bitch');
     var idx = typeof e == 'number' ? e : $(e.target).attr('data-id');
     var it = itemsList[idx];
 
@@ -55,7 +56,7 @@ function Inventory() {
     return $('<div>').addClass('item')
                     .attr('data-id', e.id)
                     .html(e.name)
-                    .on('click', _equip);;
+                    .on('click', _use);;
   }
 
   function _fill() {

@@ -2,7 +2,6 @@ if (!SGE.classes) SGE.classes = {};
 if(!window.enPrerender) window.enPrerender = {};
 
 SGE.classes.Enemy = function(line, constructor) {
-  console.log(constructor.lvl);
   var width = 40;
   var height = 40;
   var pos = SGE.utils.getSpawn(line);

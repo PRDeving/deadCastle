@@ -55,9 +55,9 @@ function Init() {
   SGE.Images.Preload({
     bg: 'http://img15.deviantart.net/df83/i/2015/075/1/c/rock_tile_a_by_hupie-d8lzed3.png',
     dirt: 'http://www.wurmpedia.com/images/thumb/2/2f/Dirt.png/180px-Dirt.png',
-    hero: '/img/hero.png',
-    enemy: '/img/enemy.png',
-    enemy2: '/img/enemy2.png',
+    hero: 'img/hero.png',
+    enemy: 'img/enemy.png',
+    enemy2: 'img/enemy2.png',
     ray: '/img/ray.png',
   }, function(media) {
     App.media = media;

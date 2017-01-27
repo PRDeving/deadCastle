@@ -36,40 +36,22 @@ function SceneConstructor(App) {
     }
   }
 
-  var llevel = App.game.game.level;
-  var lpoints = App.game.player.points;
-  var lhp = App.game.player.hp;
-  var lmana = App.game.player.mana;
   var hitzone = [];
-
   var tpoints = 0;
-
   SGE.GameLoop.Suscribe(function() {
     hitzone.length = 0;
 
-    if (lpoints != App.game.player.points) {
-      tpoints += +App.game.player.points - lpoints;
-      lpoints = +App.game.player.points;
-      App.$points.html(App.game.player.points);
+    App.$points.html(App.game.player.points);
 
-      if (tpoints > (1000 * App.game.game.level) * 1.2) {
-        App.game.game.levelUp();
-        SGE.ui.poptag('Level Up', 'level');
-      }
-    }
-    if (App.game.game.level != llevel) {
-      llevel++;
+    if (App.game.game.points > (1000 * App.game.game.level) * 1.2) {
+      App.game.game.levelUp();
       bg = App.game.game.renderBG(App.media);
       App.$level.html(App.game.game.level);
+      SGE.ui.poptag('Level Up', 'level');
     }
-    if (lhp != App.game.player.hp) {
-      lhp = +App.game.player.hp;
-      App.$hp.html(App.game.player.hp);
-    }
-    if (lmana != App.game.player.mana) {
-      lmana = +App.game.player.mana;
-      App.$mana.html(App.game.player.mana);
-    }
+
+    App.$hp.html(App.game.player.hp);
+    App.$mana.html(App.game.player.mana);
   }, true);
 
   SGE.GameLoop.Suscribe(function() {
@@ -77,23 +59,26 @@ function SceneConstructor(App) {
   });
 
   var hitcount = 100;
+  var counticks = 0;
   var distance;
+
+  var hitrange = Math.sqrt(Math.abs(Math.pow(40, 2) + Math.pow(40, 2)));
+  var playerrange = Math.sqrt(Math.abs(Math.pow(App.game.player.range, 2) + Math.pow(App.game.player.range, 2)));
   SGE.GameLoop.Suscribe(function() {
     var e;
     for (var i  = 0; i < enemies.length; i++) {
       e = enemies[i];
       if (e.isDead()) {
+        App.game.game.points += 20;
         enemies.splice(i, 1);
         continue;
       }
 
       e.update();
       distance = Math.sqrt(Math.abs(Math.pow(e.pos.x - canvas.width/2, 2) + Math.pow(e.pos.y - canvas.height/2, 2)));
-      if (distance <= Math.sqrt(Math.abs(Math.pow(App.game.player.range, 2) + Math.pow(App.game.player.range, 2)))) {
-        hitzone.push(e);
-      }
+      if (distance <= playerrange) hitzone.push(e);
 
-      if (distance < Math.sqrt(Math.abs(Math.pow(40, 2) + Math.pow(40, 2)))) {
+      if (distance < hitrange) {
         hitcount--;
         if (hitcount < 0) {
           hitcount = App.game.player.strength;
@@ -129,12 +114,9 @@ function SceneConstructor(App) {
         }
       });
     }
-  });
 
-  var counticks = 0;
-  SGE.GameLoop.Suscribe(function() {
     counticks += App.game.game.level;
-    if (counticks > 60 * App.game.game.level) {
+    if (counticks > 20 * App.game.game.level) {
       counticks = 0;
       spawn();
     }
@@ -166,7 +148,7 @@ function SceneConstructor(App) {
         if (mode == 'inv') {
           SGE.ui.modal.Close($inventary, function() {
             $inv.find('.close').off();
-            SGE.GameLoop.Run(60);
+            SGE.GameLoop.Run(30);
             App.game.player.setBonus(App.inventary.getBonus());
             App.game.player.setExtras(App.inventary.getExtras());
           });
@@ -197,7 +179,7 @@ function SceneConstructor(App) {
 
   SGE.utils.countdown(3, function() {
     start = Date.now();
-    SGE.GameLoop.Run(60);
+    SGE.GameLoop.Run(30);
   });
 }
 

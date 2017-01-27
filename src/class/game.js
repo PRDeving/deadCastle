@@ -2,6 +2,7 @@ if (!SGE.classes) SGE.classes = {};
 
 SGE.classes.Game = function(lvl) {
   var level = lvl || 0;
+  var points = 0;
 
   function _levelUp() {
     level++;
@@ -77,6 +78,7 @@ SGE.classes.Game = function(lvl) {
   }
 
   this.__defineGetter__('level', function() { return level; });
+  this.points = points;
   this.renderBG = _renderBG;
   this.levelUp = _levelUp;
 };

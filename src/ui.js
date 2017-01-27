@@ -50,6 +50,7 @@ SGE.NewModule('ui', new function() {
   }
 
   _poptagStack = [];
+  _cachedPT = {};
   _poptag = function(msg, cls, x ,y) {
     setTimeout(function() {
       _poptagStack.push(new _cpoptag(msg, cls, x, y));
@@ -65,14 +66,12 @@ SGE.NewModule('ui', new function() {
     c.height = height;
     var cx = c.getContext('2d');
     var msg = msg;
-    var s = 14;
-    cx.font = s + "pt Arial";
     this.off = cx.measureText(msg);
     var speed = Math.floor(Math.random() * 3);
 
     this.x = (x ? (x - width / 2) : 0) + (Math.floor(Math.random() * 30) - 15);
     this.y = y ? y : (canvas.height / 2 - 30);
-    this.alpha = 1.01;
+    this.alpha = 1.02;
     //
     // cx.fillStyle = "white";
     // cx.strokeStyle = "black";
@@ -106,16 +105,19 @@ SGE.NewModule('ui', new function() {
     }
 
     function _render() {
+      if (_cachedPT[msg + cls]) return _cachedPT[msg + cls];
+
       cx.clearRect(0, 0, width, height);
-      cx.font = Math.floor(s+=.2) + "pt VT323";
-      cx.globalAlpha = this.alpha -= .01;
+      cx.font = "20pt VT323";
       this.off = cx.measureText(msg);
       cx.fillText(msg, width/2 -this.off.width/2, height/2);
       cx.strokeText(msg, width/2 -this.off.width/2, height/2);
+
+      if (!_cachedPT[msg + cls]) _cachedPT[msg + cls] = c;
       return c;
     }
 
-    this.render = _render;
+    this.frame = _render();
     this.width = width;
     this.height = height;
     this.update = _update;
@@ -127,7 +129,10 @@ SGE.NewModule('ui', new function() {
       pt = _poptagStack[i];
       pt.update();
       // ctx.drawImage(pt.render(), 0, canvas.height/2 - 30 - pt.top);
-      ctx.drawImage(pt.render(), pt.x, pt.y - pt.top);
+      ctx.save();
+      ctx.globalAlpha = pt.alpha -= .02;
+      ctx.drawImage(pt.frame, pt.x, pt.y - pt.top);
+      ctx.restore();
       if (pt.end || pt.alpha < 0) _poptagStack.splice(i, 1);
     }
   }

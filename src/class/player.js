@@ -15,7 +15,7 @@ SGE.classes.Player = function() {
 
   var mana = 100;
   var manaMax = 100;
-  var manaRec = 1;
+  var manaRec = 0;
   var manaSec = 0;
   
   var dead = false;
@@ -87,13 +87,13 @@ SGE.classes.Player = function() {
 
       if (path == 'center' || el.line == path) {
         if (el.hit(1)) {
-          if (manaRec > 0) {
+          if (manaRec > 0 && mana != manaMax) {
             mana += manaRec;
             if (mana > manaMax) mana = manaMax;
             SGE.ui.poptag('+' + manaRec, 'mana', el.pos.x, el.pos.y);
           }
 
-          if (hpRec > 0) {
+          if (hpRec > 0 && hp != hpMax) {
             hp += hpRec;
             if (hp > hpMax) hp = hpMax;
             SGE.ui.poptag('+' + hpRec, 'hp', el.pos.x, el.pos.y);

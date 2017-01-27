@@ -4,7 +4,7 @@ var csssuccess = "color: #0f0; font-size: 14px";
 var csswarning = "color: #f00; font-size: 14px";
 
 (function(){
-  var ENGINE_PATH = "SGE/";
+  var ENGINE_PATH = "SGE";
   var SGE = {};
   var boostrapfn = {init: false, main: false};
 
@@ -43,7 +43,7 @@ var csswarning = "color: #f00; font-size: 14px";
 
         var mods = [];
         for(var x in Config.modules){
-          mods.push(ENGINE_PATH + "modules/" + Config.modules[x] + ".js");
+          mods.push(ENGINE_PATH + "/modules/" + Config.modules[x] + ".js");
         }
         SGE.Loader.Add(mods, false, true);
 

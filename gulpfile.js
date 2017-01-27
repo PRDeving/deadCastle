@@ -4,6 +4,6 @@ var src = 'src';
 var dist = 'mobile/www';
 
 gulp.task('build', () => {
-  gulp.src(`${src}/*`)
+  gulp.src(`${src}/**/*`)
     .pipe(gulp.dest(dist));
 });
