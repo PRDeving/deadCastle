@@ -1,0 +1,10 @@
+{
+  "Debug": true,
+  "modules": [
+    "scenemanager",
+    "canvasmanager",
+    "gameloop",
+    "mousemanager",
+    "mediamanager"
+  ]
+}
