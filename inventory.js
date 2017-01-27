@@ -1,6 +1,7 @@
 function Inventory() {
   var equip = [false, false];
   var items = [];
+  var extras = [];
   var itemsList;
   var $list = $('#inventary #inv #items');
   var $equipement = $('#inventary #equipement');
@@ -10,10 +11,24 @@ function Inventory() {
     _fill();
   }
 
-  function _equip(e) {
+  function _use(e) {
     var idx = typeof e == 'number' ? e : $(e.target).attr('data-id');
     var it = itemsList[idx];
 
+    if (it.block > 1) {
+      extras.push(it);
+
+      for (var i in items) {
+        if (items[i].id == idx) {
+          items.splice(i, 1);
+          _fill();
+          return;
+        }
+      }
+    } else _equip(idx, it);
+  }
+
+  function _equip(idx, it) {
     for (var i in items) {
       if (items[i].id == idx) {
         if (equip[it.block]) _unequip(it.block);
@@ -68,10 +83,35 @@ function Inventory() {
     }
   }
 
+  function _getExtras() {
+    var ex = {
+      "hp": 0,
+      "mana": 0,
+      "hpSec": 0,
+      "manaSec": 0,
+      "hpMax": 0,
+      "manaMax": 0,
+      "strength": 0,
+    };
+
+    for (var e in extras) {
+      ex.hp += extras[e].hp;
+      ex.hpSec += extras[e].hpSec;
+      ex.hpMax += extras[e].hpMax;
+      ex.mana += extras[e].mana;
+      ex.manaSec += extras[e].manaSec;
+      ex.manaMax += extras[e].manaMax;
+      ex.strength += extras[e].strength;
+    }
+    extras.length = 0;
+    return ex;
+  }
+
   this.add = _add;
   this.fill = _fill;
 
   this.setItems = _setItems;
   this.getBonus = _getBonus;
+  this.getExtras = _getExtras;
   this.equip = _equip;
 }

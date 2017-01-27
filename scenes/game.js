@@ -168,6 +168,7 @@ function SceneConstructor(App) {
             $inv.find('.close').off();
             SGE.GameLoop.Run(60);
             App.game.player.setBonus(App.inventary.getBonus());
+            App.game.player.setExtras(App.inventary.getExtras());
           });
         } else {
           closeMarket();

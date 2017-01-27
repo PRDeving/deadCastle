@@ -45,6 +45,19 @@ SGE.classes.Player = function() {
     strength = 100 + b.strength;
   }
 
+  function _setExtras(e) {
+    hp += e.hp;
+    hpSec += e.hpSec;
+    hpMax += e.hpMax;
+    mana += e.mana;
+    manaSec += e.manaSec;
+    manaMax += e.manaMax;
+    strength += e.strength;
+
+    if (hp > hpMax) hp = hpMax;
+    if (mana > manaMax) mana = manaMax;
+  }
+
   function _pay(a) {
     if (points - a >= 0) {
       points -= a;
@@ -148,9 +161,9 @@ SGE.classes.Player = function() {
   this.tileS = tileS;
   this.range = range;
 
-  this.manaMax = manaMax;
-  this.hpMax = hpMax;
-  this.strength = strength;
+  this.__defineGetter__('manaMax', function() { return manaMax; });
+  this.__defineGetter__('hpMax', function() { return hpMax; });
+  this.__defineGetter__('strength', function() { return strength; });
   this.__defineGetter__('points', function() { return points; });
   this.__defineGetter__('mana', function() { return mana; });
   this.__defineGetter__('hp', function() { return hp; });
@@ -162,6 +175,7 @@ SGE.classes.Player = function() {
   this.hit = _hit;
   this.reset = _reset;
   this.setBonus = _setBonus;
+  this.setExtras = _setExtras;
   this.pay = _pay;
 }
 
